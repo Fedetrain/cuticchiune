@@ -4,6 +4,7 @@
 // sito statico, e si controlla che le informazioni nascoste restino nascoste.
 
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { ReteLocale } from '../public/js/rete-locale.js';
 import { RITMO } from '../src/stanza.js';
 
@@ -127,6 +128,17 @@ await test('due al tavolo: chi ospita e chi arriva vedono lo stesso stato', asyn
   sessione.chiudi();
   await padrone.aspetta(s => !s.posti[1], 2000);
   padrone.rete.chiudi();
+});
+
+await test('la quarta carta resta ferma sul tavolo almeno due secondi', () => {
+  // Il conto della presa parte quando la quarta carta viene calata, ma quella
+  // carta prima deve volare fino al centro: i due numeri stanno in file diversi
+  // (src/stanza.js e public/js/tavolo.js) e se uno cambia senza l'altro si torna
+  // al difetto di prima — l'ultimo cala e nessuno vede che cosa ha buttato.
+  const tavolo = fs.readFileSync(new URL('../public/js/tavolo.js', import.meta.url), 'utf8');
+  const volo = Number(tavolo.match(/duration:\s*(\d+)/)[1]);
+  const fermo = RITMO.presaInVista - volo;
+  assert.ok(fermo >= 2000, `la carta resta ferma solo ${fermo} ms (volo ${volo}, presa in vista ${RITMO.presaInVista})`);
 });
 
 console.log(`\n${passati} test passati`);

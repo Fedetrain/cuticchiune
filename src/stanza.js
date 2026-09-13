@@ -20,8 +20,11 @@ import { codiceStanza, token as nuovoToken, id as nuovoId, now, pulisciNome, pul
 
 /** I tempi della stanza, in millisecondi. Un solo posto per cambiarli. */
 export const RITMO = {
-  presaInVista: 2300,       // la presa resta sul tavolo prima di andare a chi l'ha vinta:
-                            // la quarta carta deve avere il tempo di farsi guardare
+  presaInVista: 2700,       // la presa resta sul tavolo prima di andare a chi l'ha vinta.
+                            // Il conto parte quando la QUARTA carta viene calata, e
+                            // il suo volo dura 620 ms (public/js/tavolo.js): restano
+                            // due secondi buoni di carta ferma, che è il tempo che
+                            // serve per vedere che cosa ha buttato l'ultimo.
   fineMano: 9000,           // il verdetto della mano resta a schermo (il padrone può saltare)
   primaCartaBot: 900,       // il bot «pensa» un attimo prima di giocare
   cartaBot: 1300,
