@@ -65,14 +65,39 @@ export class Tavolo {
     targa.classList.toggle('io', io);
     targa.classList.toggle('pericolo', singhe >= 4);
 
-    targa.innerHTML = `
-      <span class="nome">${g ? escape(g.nome) : 'vuoto'}${g?.bot ? '<small>bot</small>' : ''}</span>
-      <span class="dati">
-        ${m ? `<span class="dato" title="prese fatte in questa mano"><b>${nPrese}</b>prese</span>` : ''}
-        ${punti !== null && m ? `<span class="dato" title="punti presi in questa mano"><b>${punti}</b>punti</span>` : ''}
-        <span class="singhe" title="${singhe} singhe" aria-label="${singhe} singhe">${tally(singhe)}</span>
-      </span>
-      ${io && s.scadenzaTurno && inTurno ? '<span class="barra-tempo" aria-hidden="true"><i></i></span>' : ''}`;
+    // La targa si costruisce UNA volta e poi si aggiorna solo dove cambia.
+    // Rifarla con innerHTML a ogni stato (e gli stati arrivano a ogni carta)
+    // buttava via e ricreava quattro targhe per volta: niente transizioni, un
+    // tremolio a ogni giocata, e la barra del tempo che ripartiva da capo.
+    if (!targa.firstElementChild) {
+      targa.innerHTML = `<span class="nome"></span>
+        <span class="dati">
+          <span class="dato prese" title="prese fatte in questa mano" hidden><b></b>prese</span>
+          <span class="dato punti" title="punti presi in questa mano" hidden><b></b>punti</span>
+          <span class="singhe"></span>
+        </span>
+        <span class="barra-tempo" aria-hidden="true" hidden><i></i></span>`;
+    }
+    const eNome = targa.querySelector('.nome');
+    const nome = (g ? g.nome : 'vuoto') + (g?.bot ? '·bot' : '');
+    if (eNome.dataset.v !== nome) {
+      eNome.dataset.v = nome;
+      eNome.innerHTML = `${escape(g ? g.nome : 'vuoto')}${g?.bot ? '<small>bot</small>' : ''}`;
+    }
+    const ePrese = targa.querySelector('.prese');
+    ePrese.hidden = !m;
+    if (m && ePrese.firstElementChild.textContent !== String(nPrese)) ePrese.firstElementChild.textContent = nPrese;
+    const ePunti = targa.querySelector('.punti');
+    ePunti.hidden = !(m && punti !== null);
+    if (m && punti !== null && ePunti.firstElementChild.textContent !== String(punti)) ePunti.firstElementChild.textContent = punti;
+    const eSinghe = targa.querySelector('.singhe');
+    if (eSinghe.dataset.v !== String(singhe)) {
+      eSinghe.dataset.v = String(singhe);
+      eSinghe.textContent = tally(singhe);
+      eSinghe.title = `${singhe} singhe`;
+      eSinghe.setAttribute('aria-label', `${singhe} singhe`);
+    }
+    targa.querySelector('.barra-tempo').hidden = !(io && s.scadenzaTurno && inTurno);
 
     const manoAltrui = posto.querySelector('.mano-altrui');
     if (manoAltrui) {
@@ -216,7 +241,7 @@ export class Tavolo {
   larghezzaCarta() { return parseFloat(getComputedStyle(this.el).getPropertyValue('--carta-w')) || 60; }
 
   /** Una carta vola da `da` a `a` (centri, in coordinate del tavolo) e sparisce. */
-  vola(codice, faccia, da, a, { durata = 380, ritardo = 0, rotazione = 0, scala = 1 } = {}) {
+  vola(codice, faccia, da, a, { durata = 380, ritardo = 0, rotazione = 0, scala = 1, scalaFine = 1, svanisce = false } = {}) {
     const el = elementoCarta(codice, faccia);
     el.classList.add('in-volo');
     const w = this.larghezzaCarta(), h = w * 1.6;
@@ -224,8 +249,8 @@ export class Tavolo {
     this.volo.appendChild(el);
     if (ridotto()) { el.remove(); return Promise.resolve(); }
     const anim = el.animate([
-      { transform: `translate(0,0) rotate(${rotazione}deg) scale(${scala})` },
-      { transform: `translate(${a.x - da.x}px, ${a.y - da.y}px) rotate(0deg) scale(1)` },
+      { transform: `translate(0,0) rotate(${rotazione}deg) scale(${scala})`, opacity: 1 },
+      { transform: `translate(${a.x - da.x}px, ${a.y - da.y}px) rotate(0deg) scale(${scalaFine})`, opacity: svanisce ? 0.15 : 1 },
     ], { duration: durata, delay: ritardo, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
     // se la scheda va in secondo piano le animazioni si fermano: la carta va via comunque
     const rete = setTimeout(() => el.remove(), durata + ritardo + 400);
@@ -271,8 +296,9 @@ export class Tavolo {
     if (ridotto()) { el.classList.remove('in-volo'); return; }
     const giro = lato === 'sinistra' ? -60 : lato === 'destra' ? 60 : lato === 'alto' ? 180 : 0;
     const anim = el.animate([
-      { transform: `translate(${da.x - a.x}px, ${da.y - a.y}px) rotate(${giro}deg)`, opacity: 0.6 },
-      { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${da.x - a.x}px, ${da.y - a.y}px) rotate(${giro}deg) scale(0.94)`, opacity: 0.55, offset: 0 },
+      { transform: `translate(${(da.x - a.x) * 0.08}px, ${(da.y - a.y) * 0.08}px) rotate(${giro * 0.06}deg) scale(1.05)`, opacity: 1, offset: 0.72 },
+      { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1, offset: 1 },
     ], { duration: 620, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
     const rete = setTimeout(() => el.classList.remove('in-volo'), 1100);
     anim.finished.finally(() => { clearTimeout(rete); el.classList.remove('in-volo'); });
@@ -285,13 +311,14 @@ export class Tavolo {
     const lato = this.lato(ev.vincitore);
     const a = this.centroDi(this.posti[lato]);
     this.suoni?.raccogli();
-    for (const l of LATI) {
+    const ordine = [this.lato(ev.vincitore), ...LATI.filter(l => l !== this.lato(ev.vincitore))];
+    ordine.forEach((l, i) => {
       const el = this.slots[l].firstElementChild;
-      if (!el) continue;
+      if (!el) return;
       const da = this.centroDi(el);
       el.remove();
-      this.vola(el.dataset.carta, true, da, a, { durata: 420 });
-    }
+      this.vola(el.dataset.carta, true, da, a, { durata: 460, ritardo: i * 45, scalaFine: 0.72, svanisce: true });
+    });
   }
 
   /** Un fumetto vicino alla targa. */

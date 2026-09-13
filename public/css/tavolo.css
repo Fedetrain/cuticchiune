@@ -219,3 +219,49 @@
 #mia-mano.attesa .carta.scostata-dx { transform: rotate(var(--rot, 0deg)) translate(22px, calc(var(--giu, 0px) + 8px)); }
 /* la scelta resta sopra a tutte, anche a quelle che le stanno addosso */
 #mia-mano .carta.scelta { z-index: 3; }
+
+/* ── fluidità ───────────────────────────────────────────────────────
+ * Le carte che si muovono vengono promosse a livello proprio: il browser le
+ * sposta senza ridisegnare il panno sotto. Solo quelle in volo e quelle sul
+ * tavolo, che sono poche: `will-change` su tutto costa più di quanto rende. */
+#volo .carta, .slot .carta { will-change: transform; }
+#volo .carta { backface-visibility: hidden; }
+
+/* Il respiro della targa di turno animava l'ombra, e l'ombra si ridisegna a
+ * ogni fotogramma. Adesso respira un anello che sta sopra, in scala e opacità:
+ * roba da compositore, non da pittore. */
+.targa { position: relative; transition: transform var(--medio) var(--uscita), background-color var(--medio); }
+.targa.in-turno { animation: none; }
+.targa.in-turno::before {
+  content: ""; position: absolute; inset: -3px; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 3px rgba(245,197,66,0.75);
+  animation: respiro 2.4s ease-in-out infinite;
+}
+@keyframes respiro {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.06); opacity: 0; }
+}
+
+/* La mano: le carte si spostano con calma quando il ventaglio si apre, e si
+ * alzano appena al passaggio del dito — un affordance, non un effetto. */
+#mia-mano .carta { transition: transform 200ms var(--uscita), filter var(--medio), opacity var(--medio), box-shadow 200ms ease; }
+@media (hover: hover) {
+  #mia-mano .carta:not(.non-valida):hover { transform: rotate(var(--rot, 0deg)) translateY(calc(var(--giu, 0px) - 12px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .targa.in-turno::before { animation: none; opacity: 0.85; }
+  #mia-mano .carta { transition: none; }
+}
+
+/* Telefono girato di lato: lo schermo diventa basso e largo, e con le carte
+ * misurate sulla larghezza la mano si mangiava tutto il tavolo. Qui le carte
+ * si misurano sull'ALTEZZA, e il tavolo respira di nuovo. */
+@media (max-height: 560px) {
+  :root { --carta-w: clamp(44px, 13vh, 92px); }
+  #mia-mano { height: calc(var(--carta-h) + 14px); bottom: 4px; padding-bottom: 2px; }
+  .posto[data-lato="basso"] { bottom: calc(var(--carta-h) + 12px); }
+  #centro { top: 44%; height: calc(var(--carta-h) * 1.7); }
+  #tavolo { margin: 0 var(--sp-2) var(--sp-1); padding: 6px; }
+  .tovaglia { inset: 6px; }
+}
