@@ -4,6 +4,6 @@ screenshot/
 carte_siciliane_by_mauriziogrillo_dack3b9.zip
 Carte_da_gioco_siciliane_-_*.jpg
 sito/
-public/assets/mazzo/*
-!public/assets/mazzo/LEGGIMI.txt
+# il mazzo che si pubblica sta qui (CC BY-SA, vedi CREDITI.txt): quello va in git.
+# Scansioni di mazzi comprati NO: si tengono in locale e il build le salta.
 .gh-pages/

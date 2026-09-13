@@ -39,8 +39,9 @@ stanza rispetta `X-Forwarded-Host` e `X-Forwarded-Proto`).
 | **Albo** | il server tiene in `dati/albo.json` partite, salvezze e singhe di ogni nome umano |
 | **Audio** | tutto sintetizzato (Web Audio, nessun file): la carta che scivola, la presa, «tocca a te», la singa. Parte muto, si accende dal bottone |
 
-Tutto funziona **senza internet**: i font sono serviti in locale (OFL), le
-carte sono SVG generati, non c'è un solo CDN.
+Tutto funziona **senza internet**: font e carte stanno nel repo (niente CDN).
+L'unica eccezione è il sito statico in quattro, dove i browser hanno bisogno
+del broker di PeerJS per trovarsi.
 
 ---
 
@@ -87,33 +88,34 @@ verifica una per una, compreso l'«esce franco».
 
 ## Le carte
 
-Le 40 carte sono **SVG generati** in `public/js/carte.js`, disegnate sul modello
-del mazzo siciliano tradizionale: i **denari** sono soli d'oro a rosone,
-l'**asso di denari** porta l'**aquila a volo basso**, il **tre di denari** la
-**Trinacria**; le **coppe** sono calici d'oro e rosso e l'**asso di coppe** è il
-**lebete nuziale** a due anse; le **spade** sono scimitarre ricurve intrecciate
-(l'asso dritto, col fiocco); i **bastoni** rami nodosi con le foglie,
-intrecciati; le **figure** sono a figura intera — la **Donna** al posto del
-fante, il **Cavallo**, il **Re** in piedi — e fra i semi delle carte numerali
-corrono le decorazioni floreali tipiche del mazzo.
+Online si gioca con un **mazzo siciliano vero**: le 40 immagini in
+`public/assets/mazzo/` sono ritagli delle scansioni «Carte da gioco siciliane»
+di **Matsoftware** su Wikimedia Commons, **CC BY-SA 3.0** — un foglio per seme,
+tagliato e riscalato da `tools/ritaglia-fogli.mjs`. Provenienza, licenza e
+modifiche stanno in `public/assets/mazzo/CREDITI.txt`, e la citazione si legge
+anche in fondo alle regole, dentro il gioco. Essendo opere derivate, **quelle
+immagini restano CC BY-SA**: il resto del progetto è MIT.
 
-Non sono scansioni, ed e' una scelta che conta: i disegni dei mazzi in
-commercio sono coperti da diritti, quindi **online vanno gli SVG**, che sono
-roba nostra.
-
-Per giocare in casa il gioco accetta comunque un **mazzo fotografico**: metti
-in `public/assets/mazzo/` una immagine per carta (`D1 … B10`, png/jpg/webp,
-piu' `dorso`; vedi il `LEGGIMI.txt` li' dentro) e con tutte e 40 presenti il
-client le usa al posto dei disegni. `GET /api/mazzo` dice quante ne ha trovate.
-Se le immagini sono un foglio per seme o una cartella numerata,
-`npm run mazzo -- <cartella>` le ritaglia e le rinomina.
-
-Quella cartella resta **fuori dal sito statico**: `tools/costruisci-sito.mjs`
-la salta apposta. Se il progetto finisce in un repo pubblico, va tolta anche da
-li' — online ci vanno solo gli SVG.
-
-Per guardare le 40 carte tutte insieme:
+Se il mazzo fotografico non c'è, il gioco disegna le carte da solo: i 40 **SVG
+generati** in `public/js/carte.js`, sul modello del mazzo siciliano — i
+**denari** soli d'oro a rosone, l'**asso di denari** con l'**aquila a volo
+basso**, il **tre di denari** con la **Trinacria**; le **coppe** calici d'oro e
+rosso, l'**asso di coppe** il **lebete nuziale** a due anse; le **spade**
+scimitarre ricurve intrecciate; i **bastoni** rami nodosi con le foglie; le
+**figure** a figura intera — la **Donna** al posto del fante, il **Cavallo**, il
+**Re** in piedi. Per guardarle tutte insieme:
 `node tools/anteprima-carte.mjs > carte.html`.
+
+**Vuoi usare il tuo mazzo?** Metti in `public/assets/mazzo/` una immagine per
+carta (`D1 … B10`, png/jpg/webp, più `dorso`): con tutte e 40 presenti il client
+usa quelle. `npm run mazzo -- <cartella>` importa una cartella numerata,
+`node tools/ritaglia-fogli.mjs <cartella>` quattro fogli da dieci carte.
+`GET /api/mazzo` dice quante ne ha trovate.
+
+⚠️ **Le scansioni di un mazzo comprato in cartoleria non si pubblicano.** Per
+questo il build porta online il mazzo **solo se** nella cartella c'è un
+`CREDITI.txt` con autore e licenza: senza quel file `tools/costruisci-sito.mjs`
+salta tutto e il sito mostra gli SVG.
 
 ---
 

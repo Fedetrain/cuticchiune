@@ -6,10 +6,10 @@
 // pagina — window.CUTICCHIUNE_STATICO — che dice al client di tenersi il
 // tavolo in casa (vedi public/js/ambiente.js).
 //
-// Due cose restano fuori apposta:
-//   · public/assets/mazzo/  le scansioni di un mazzo in commercio: si usano in
-//     casa, non si pubblicano. Online vanno le carte disegnate da carte.js.
-//   · /api/  non esiste: niente albo, niente elenco di tavoli pubblici.
+// Il mazzo fotografico viene portato nel sito SOLO se in public/assets/mazzo/
+// c'e' un CREDITI.txt che dice autore e licenza: le scansioni di un mazzo
+// comprato restano a casa, e online si vedono le carte disegnate da carte.js.
+// Di /api/ invece non c'e' niente: nessun albo, nessun elenco di tavoli.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -17,7 +17,12 @@ import { fileURLToPath } from 'node:url';
 
 const RADICE = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const DEST = path.resolve(process.argv[2] || path.join(RADICE, 'sito'));
-const FUORI = ['assets/mazzo'];          // niente scansioni nel sito pubblico
+// Il mazzo fotografico va online SOLO se dice da dove viene: dentro la sua
+// cartella ci vuole un CREDITI.txt (autore e licenza). Senza, resta a casa —
+// e' la regola che tiene fuori dal sito le scansioni di un mazzo comprato.
+const MAZZO = 'assets/mazzo';
+const FUORI = fs.existsSync(path.join(path.dirname(path.dirname(fileURLToPath(import.meta.url))),
+  'public', MAZZO, 'CREDITI.txt')) ? [] : [MAZZO];
 const TESTI = new Set(['.html', '.css', '.webmanifest']);
 
 /** Gli indirizzi assoluti (/js/app.js) non funzionano sotto un sottodominio di
@@ -70,6 +75,23 @@ const html = fs.readFileSync(pagina, 'utf8');
 if (!html.includes('CUTICCHIUNE_STATICO')) {
   fs.writeFileSync(pagina, html.replace('<script type="module"',
     '<script>window.CUTICCHIUNE_STATICO = true;</script>\n<script type="module"'));
+}
+
+// L'elenco del mazzo: senza server non c'e' /api/mazzo a dire quali carte
+// esistono, quindi la lista la scrive il build e il client la legge da qui.
+const cartelleMazzo = path.join(DEST, MAZZO);
+if (fs.existsSync(cartelleMazzo)) {
+  const mappa = {};
+  for (const f of fs.readdirSync(cartelleMazzo)) {
+    const m = f.match(/^([DCSB](?:[1-9]|10)|dorso)\.(png|jpg|jpeg|webp|svg)$/i);
+    if (m) mappa[m[1] === 'dorso' ? 'dorso' : m[1].toUpperCase()] = `${MAZZO}/${f}`;
+  }
+  const carte = Object.keys(mappa).filter((k) => k !== 'dorso').length;
+  const crediti = (fs.readFileSync(path.join(cartelleMazzo, 'CREDITI.txt'), 'utf8')
+    .match(/^BREVE:\s*(.+)$/m) || [])[1] || null;
+  fs.writeFileSync(path.join(cartelleMazzo, 'elenco.json'),
+    JSON.stringify({ immagini: mappa, carte, completo: carte === 40, crediti }, null, 1));
+  console.log(`  · mazzo fotografico: ${carte} carte`);
 }
 
 // Pages non deve passare le pagine per Jekyll

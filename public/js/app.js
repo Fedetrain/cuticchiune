@@ -100,8 +100,16 @@ rete.addEventListener('aperto', () => { if (stato && faseVista) toast('Di nuovo 
 
 rete.connetti();
 
-// il mazzo fotografico, se c'è, senza fermare l'avvio
-fetch('/api/mazzo').then(r => r.json()).then(m => { if (m?.completo) usaImmagini(m.immagini); }).catch(() => {});
+// il mazzo fotografico, se c'è, senza fermare l'avvio. Col server lo chiedi a
+// lui; sul sito statico la lista la scrive il build in assets/mazzo/elenco.json.
+fetch(STATICO ? 'assets/mazzo/elenco.json' : '/api/mazzo')
+  .then(r => r.json())
+  .then(m => {
+    if (m?.completo) usaImmagini(m.immagini);
+    // la licenza delle carte vuole che l'autore si veda: sta nelle regole
+    if (m?.crediti) { const p = $('#crediti-mazzo'); p.textContent = m.crediti; p.hidden = false; }
+  })
+  .catch(() => {});
 
 const daUrl = codiceDaUrl();
 if (daUrl) {

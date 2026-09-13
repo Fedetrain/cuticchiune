@@ -29,5 +29,11 @@ Nel repo ci sono anche pezzi di altri, con la loro licenza:
   public/assets/fonts/*.woff2    Fraunces e Figtree — SIL Open Font License 1.1
                                  (vedi LICENZA-OFL.txt nella stessa cartella)
 
-Le 40 carte del gioco sono disegnate in public/js/carte.js: non sono la
+  public/assets/mazzo/*.webp     «Carte da gioco siciliane» di Matsoftware,
+                                 da Wikimedia Commons — CC BY-SA 3.0.
+                                 Ritagliate e riscalate: essendo derivate,
+                                 restano CC BY-SA 3.0 (vedi CREDITI.txt li'
+                                 dentro).
+
+Le 40 carte disegnate in public/js/carte.js sono invece nostre, e non sono la
 scansione di nessun mazzo in commercio.
