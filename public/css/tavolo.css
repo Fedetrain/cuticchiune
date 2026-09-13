@@ -202,3 +202,10 @@
   .targa.in-turno { animation: none; }
   .slot .carta { transition: none; }
 }
+
+/* Su uno schermo grande il tavolo diventa una piazza e le carte francobolli:
+ * da 1100px in su crescono, e la partita si guarda da lontano. */
+@media (min-width: 1100px) {
+  :root { --carta-w: clamp(100px, 9.5vw, 168px); }
+  #centro { width: calc(var(--carta-w) * 3.2); }
+}
