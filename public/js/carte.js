@@ -398,16 +398,52 @@ export function nomeSeme(seme) { return NOMI_SEMI[seme]; }
 // ─────────────────────── il mazzo fotografico, se c'è ───────────────────────
 
 let immagini = {};
-export function usaImmagini(mappa) { immagini = mappa || {}; }
-export function haImmagini() { return Object.keys(immagini).length >= 40; }
+/** Le immagini gia' scaricate E decodificate, pronte da clonare. */
+const pronte = new Map();
 
-function fronte(codice) {
-  if (immagini[codice]) return `<img src="${immagini[codice]}" alt="${etichetta(codice)}" draggable="false">`;
-  return svgCarta(codice);
+/**
+ * Il mazzo fotografico. Le carte non si mettono in pagina con un <img src>
+ * appena creato: il browser la decodifica mentre la disegna, e per un istante
+ * si vede un rettangolo bianco che poi diventa una carta — al tavolo sembrava
+ * che l'ultimo calasse una carta vuota. Qui si scarica tutto il mazzo una
+ * volta, si aspetta decode(), e poi ogni carta e' un clone di una immagine
+ * gia' pronta: entra in pagina gia' disegnata.
+ */
+export function usaImmagini(mappa) {
+  immagini = mappa || {};
+  const attese = [];
+  for (const [codice, url] of Object.entries(immagini)) {
+    const img = new Image();
+    img.decoding = 'async';
+    img.draggable = false;
+    img.alt = codice === 'dorso' ? '' : etichetta(codice);
+    img.src = url;
+    const fatto = () => pronte.set(codice, img);
+    if (img.decode) attese.push(img.decode().then(fatto).catch(() => { if (img.complete) fatto(); }));
+    else img.addEventListener('load', fatto, { once: true });
+  }
+  return Promise.allSettled(attese);   // per chi vuole aspettare il mazzo intero
 }
-function retro() {
-  if (immagini.dorso) return `<img src="${immagini.dorso}" alt="" draggable="false">`;
-  return svgDorso();
+export function haImmagini() { return Object.keys(immagini).length >= 40; }
+export function mazzoPronto() { return pronte.size >= Object.keys(immagini).length && haImmagini(); }
+
+/** La faccia di una carta, come nodo: clone pronto, immagine che carica, o disegno. */
+function facciaDi(codice) {
+  const pronta = pronte.get(codice);
+  if (pronta) return pronta.cloneNode();
+  const buco = document.createElement('div');
+  buco.innerHTML = immagini[codice]
+    // decoding=sync: meglio un frame di attesa che un rettangolo bianco
+    ? `<img src="${immagini[codice]}" alt="${etichetta(codice)}" draggable="false" decoding="sync">`
+    : svgCarta(codice);
+  return buco.firstElementChild;
+}
+function retroDi() {
+  const pronta = pronte.get('dorso');
+  if (pronta) return pronta.cloneNode();
+  const buco = document.createElement('div');
+  buco.innerHTML = svgDorso();
+  return buco.firstElementChild;
 }
 
 /** Un elemento DOM .carta pronto da mettere in pagina. `faccia`: true = scoperta. */
@@ -415,6 +451,10 @@ export function elementoCarta(codice, faccia = true) {
   const el = document.createElement('div');
   el.className = 'carta' + (faccia ? '' : ' coperta');
   if (codice) el.dataset.carta = codice;
-  el.innerHTML = `<div class="carta-fronte">${faccia && codice ? fronte(codice) : ''}</div><div class="carta-retro">${retro()}</div>`;
+  const fronte = document.createElement('div'); fronte.className = 'carta-fronte';
+  if (faccia && codice) fronte.appendChild(facciaDi(codice));
+  const retro = document.createElement('div'); retro.className = 'carta-retro';
+  retro.appendChild(retroDi());
+  el.append(fronte, retro);
   return el;
 }

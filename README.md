@@ -37,6 +37,7 @@ stanza rispetta `X-Forwarded-Host` e `X-Forwarded-Proto`).
 | **Al tavolo** | chat, **ventuno frasi** siciliane che compaiono come fumetti («Napoliiii», «Soffia cca!», «All’ultimo c’è regalo»…), «ultima presa», le prese della mano, le regole sempre a portata |
 | **Fine partita** | classifica, chi si salva, chi perde, chi «esce franco»; **Rivincita** (quando tutti gli umani seduti la chiedono) o «Torna al tavolo» per cambiare posti |
 | **Albo** | il server tiene in `dati/albo.json` partite, salvezze e singhe di ogni nome umano |
+| **Schermo** | resta acceso finché sei al tavolo (Screen Wake Lock): chi aspetta il turno non tocca niente per minuti, e il telefono si bloccherebbe sul più bello |
 | **Audio** | tutto sintetizzato (Web Audio, nessun file): la carta che scivola, la presa, «tocca a te», la singa. Parte muto, si accende dal bottone |
 
 Tutto funziona **senza internet**: font e carte stanno nel repo (niente CDN).

@@ -115,8 +115,15 @@ export function avviaPartita({ rete, esci, stato }) {
       `<li class="${r.perde ? 'perde' : (r.franco ? 'franco' : 'salvo')}"><span class="pos">${i + 1}</span><span class="nome">${escape(r.nome)}${r.posto === io ? ' <em>tu</em>' : ''}</span><span class="esito">${r.perde ? 'perde' : r.franco ? 'esce franco' : 'si salva'}</span><span class="singhe">${r.singhe}</span></li>`).join('');
     $('#btn-torna-attesa').hidden = !s.io.host;
     $('#btn-rivincita').hidden = s.io.posto < 0;
+    // Da soli coi bot la partita nuova parte col bottone, e il bottone lo dice.
+    // In compagnia serve il sì di tutti gli umani seduti: si aspetta, e si vede
+    // quanti mancano.
     const umani = s.posti.filter(g => g && !g.bot && g.presente).length;
-    $('#fp-rivincita').textContent = s.rivincita.length ? `Rivincita: ${s.rivincita.length} su ${umani} pronti` : '';
+    const solo = umani <= 1;
+    $('#btn-rivincita').textContent = solo ? 'Nuova partita' : 'Rivincita';
+    $('#fp-rivincita').textContent = solo ? ''
+      : s.rivincita.length ? `Rivincita: ${s.rivincita.length} su ${umani} pronti — si riparte quando ci sono tutti`
+      : 'La rivincita parte quando la chiedono tutti';
     $('#btn-rivincita').disabled = s.rivincita.includes(s.io.id);
     if (!finePartitaVista && io >= 0) { if (perde.some(r => r.posto === io)) audio.suoni.perso(); else audio.suoni.salvo(); }
     finePartitaVista = true;

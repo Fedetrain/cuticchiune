@@ -69,6 +69,12 @@ await test('tre bot, la partita parte e finisce: qualcuno perde davvero', async 
   assert.equal(c.stato.fase, 'fine-partita', 'la partita deve finire da sola');
   assert.ok(c.stato.classifica?.length === 4, 'quattro in classifica');
   assert.ok(c.stato.partita.esito, 'un esito c\'e\'');
+
+  // il bottone della partita nuova: da soli coi bot deve ripartire subito,
+  // senza aspettare il sì di nessuno
+  c.rete.invia({ t: 'rivincita' });
+  await c.aspetta(s => s.fase === 'partita', 3000);
+  assert.deepEqual(c.stato.partita.singhe, [0, 0, 0, 0], 'la partita nuova riparte da zero singhe');
   c.rete.chiudi();
 });
 

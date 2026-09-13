@@ -14,6 +14,7 @@ import * as audio from './audio.js';
 import { avviaHome } from './schermi/home.js';
 import { avviaLobby } from './schermi/lobby.js';
 import { avviaPartita } from './schermi/partita.js';
+import { tieniSveglio } from './schermo-sveglio.js';
 
 // Con un server dietro si parla col server. Sul sito statico (GitHub Pages) il
 // tavolo sta nella pagina di chi lo apre e gli altri arrivano in WebRTC.
@@ -43,6 +44,7 @@ function entraCon(codice, nome) {
 }
 
 function esci() {
+  tieniSveglio(false);
   rete.chiudi();
   stato = null; benvenuto = null; faseVista = null;
   mem.ultimo = null;
@@ -92,6 +94,9 @@ rete.on('cacciato', () => { toast('Sei stato mandato via dal tavolo', true); esc
 rete.on('stato', (s) => {
   const prima = stato;
   stato = s;
+  // finche' si e' al tavolo lo schermo resta acceso: chi aspetta il turno non
+  // tocca niente per minuti, e il telefono si bloccherebbe sul piu' bello
+  tieniSveglio(s.fase !== 'attesa');
   if (s.fase === 'attesa') { mostraSchermo('lobby'); lobby.render(s); }
   else {
     if (faseVista === 'attesa' || faseVista === null) mostraSchermo('partita');
@@ -113,7 +118,12 @@ rete.connetti();
 fetch(STATICO ? 'assets/mazzo/elenco.json' : '/api/mazzo')
   .then(r => r.json())
   .then(m => {
-    if (m?.completo) { usaImmagini(m.immagini); disegnaOrnamenti(); }
+    if (m?.completo) {
+      // gli ornamenti si ridisegnano quando le carte sono davvero pronte,
+      // se no restano i disegni SVG mentre al tavolo ci sono le foto
+      usaImmagini(m.immagini).then(disegnaOrnamenti);
+      disegnaOrnamenti();
+    }
     // la licenza delle carte vuole che l'autore si veda: sta nelle regole
     if (m?.crediti) { const p = $('#crediti-mazzo'); p.textContent = m.crediti; p.hidden = false; }
   })

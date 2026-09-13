@@ -7,7 +7,7 @@
 // Deterministico a parità di stato: i test lo possono prevedere.
 
 import { semeDi, forzaDi, puntiDi } from './mazzo.js';
-import { mosseValide, vincitorePresa, puntiPresa, preseRimaste, N } from './cuticchiune.js';
+import { mosseValide, vincitorePresa, puntiPresa, preseRimaste, PUNTI_ULTIMA, N } from './cuticchiune.js';
 
 /** Quanto è pericoloso tenersi questa carta: punti, poi forza (un tre prende, un quattro mai). */
 function pericolo(c) { return puntiDi(c) * 10 + forzaDi(c); }
@@ -48,7 +48,9 @@ export function scegli(m, posto, rnd = Math.random) {
   const rimaste = preseRimaste(m);
   const hoPreso = m.nPrese[posto] > 0;
   const ultimo = m.tavolo.length === N - 1;
-  const inBallo = puntiPresa(m.tavolo);
+  // L’ultima presa porta tre punti in piu’: per il bot vale come se sul tavolo
+  // ci fosse un asso in piu’, e infatti in fondo alla mano se ne guarda bene.
+  const inBallo = puntiPresa(m.tavolo) + (rimaste === 1 ? PUNTI_ULTIMA : 0);
   // «mi serve una presa»: non ho preso e la mano si accorcia
   const urgenza = !hoPreso && rimaste <= PARAMETRI.urgenza;
   const disperazione = !hoPreso && rimaste <= PARAMETRI.disperazione;
