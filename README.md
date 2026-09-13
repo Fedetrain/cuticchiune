@@ -4,7 +4,8 @@ Il gioco di carte siciliane a **quattro giocatori, ognuno per sé**, ispirato al
 Tressette ma con l'obiettivo rovesciato: si vince **non prendendo** — ma chi non
 prende nemmeno una volta perde a prescindere.
 
-Un progetto a sé, in questa cartella: non c'entra con `_private/gioco-ndrina`.
+**▶ Si gioca qui: [fedetrain.github.io/cuticchiune](https://fedetrain.github.io/cuticchiune/)**
+— da solo contro tre bot, o in quattro passando il codice del tavolo agli amici.
 
 Una stanza, un link, quattro telefoni. Nessun account, nessuna installazione:
 si apre il link, si scrive il nome, si gioca.
