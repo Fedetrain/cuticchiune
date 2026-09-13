@@ -1,0 +1,8 @@
+node_modules/
+dati/albo.json
+screenshot/
+carte_siciliane_by_mauriziogrillo_dack3b9.zip
+Carte_da_gioco_siciliane_-_*.jpg
+sito/
+public/assets/mazzo/*
+!public/assets/mazzo/LEGGIMI.txt

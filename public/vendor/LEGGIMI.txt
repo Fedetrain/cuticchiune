@@ -1,0 +1,13 @@
+Roba di altri, presa com'e' e tenuta qui dentro apposta: il sito su GitHub
+Pages non deve dipendere da una CDN che domani cambia idea.
+
+  qrcode.min.js   qrcode-generator 1.4.4 — Kazuhiko Arase — licenza MIT
+                  https://github.com/kazuhikoarase/qrcode-generator
+                  Serve alla lobby per disegnare il QR quando non c'e' il
+                  server che lo genera.
+
+  peerjs.min.js   PeerJS 1.5.5 — licenza MIT
+                  https://github.com/peers/peerjs
+                  E' il trasporto WebRTC del sito statico: mette in
+                  comunicazione i telefoni senza un server nostro (il broker
+                  pubblico di PeerJS serve solo a farli incontrare).

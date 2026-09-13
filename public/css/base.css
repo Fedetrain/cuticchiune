@@ -1,0 +1,163 @@
+/* CUTICCHIUNE — le fondamenta.
+ *
+ * L'identità è una terrazza siciliana a mezzogiorno: la calce delle pareti,
+ * il cobalto delle maioliche, un limone. Chiaro, netto, senza legno e senza
+ * oro. Le carte, d'avorio, sono l'unica cosa antica: tutto il resto è pulito
+ * e contemporaneo, e le fa risaltare.
+ *
+ *   calce      la carta di fondo, un bianco caldo di parete
+ *   inchiostro il testo, un blu notte
+ *   cobalto    l'accento: azioni, il tavolo, il codice
+ *   limone     un solo uso: «tocca a te», la carta scelta
+ *   terracotta il male: la singa, chi perde
+ *
+ * Font (OFL, serviti in locale): Fraunces per i titoli, Figtree per il resto.
+ */
+
+@font-face { font-family: 'Fraunces'; font-weight: 300 900; font-display: swap; src: url('/assets/fonts/fraunces.woff2') format('woff2'); }
+@font-face { font-family: 'Figtree'; font-weight: 300 900; font-display: swap; src: url('/assets/fonts/figtree.woff2') format('woff2'); }
+
+:root {
+  --calce: #f7f2e8;
+  --calce-2: #efe7d8;
+  --calce-3: #e3d9c5;
+  --inchiostro: #12233f;
+  --inchiostro-2: #3a4a66;
+  --muto: #7b8699;
+  --cobalto: #1f4fa3;
+  --cobalto-scuro: #173b7c;
+  --cobalto-notte: #11295a;
+  --cobalto-velo: rgba(31, 79, 163, 0.12);
+  --limone: #f7c948;
+  --limone-scuro: #d9a51c;
+  --terracotta: #c9502b;
+  --terracotta-velo: rgba(201, 80, 43, 0.12);
+  --basilico: #2f8a57;
+  --bianco: #fffdf8;
+  --ombra: rgba(18, 35, 63, 0.16);
+  --ombra-forte: rgba(18, 35, 63, 0.32);
+
+  /* le maioliche: una sola piastrella, ripetuta */
+  --maiolica: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23f7f2e8'/%3E%3Cpath d='M20 3 L37 20 L20 37 L3 20 Z' fill='none' stroke='%231f4fa3' stroke-width='2.2'/%3E%3Cpath d='M20 10 Q26 16 20 22 Q14 16 20 10 Z M20 18 Q26 24 20 30 Q14 24 20 18 Z M10 20 Q16 14 22 20 Q16 26 10 20 Z M18 20 Q24 14 30 20 Q24 26 18 20 Z' fill='%231f4fa3'/%3E%3Ccircle cx='20' cy='20' r='3.4' fill='%23f7c948' stroke='%231f4fa3' stroke-width='1.2'/%3E%3Ccircle cx='0' cy='0' r='3.2' fill='%231f4fa3'/%3E%3Ccircle cx='40' cy='0' r='3.2' fill='%231f4fa3'/%3E%3Ccircle cx='0' cy='40' r='3.2' fill='%231f4fa3'/%3E%3Ccircle cx='40' cy='40' r='3.2' fill='%231f4fa3'/%3E%3C/svg%3E");
+
+  --f-titolo: 'Fraunces', 'Georgia', serif;
+  --f-corpo: 'Figtree', 'Helvetica Neue', Arial, sans-serif;
+
+  --r-s: 8px; --r-m: 14px; --r-l: 22px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px;
+  --tocco: 46px;
+
+  --veloce: 160ms; --medio: 320ms; --lento: 640ms;
+  --uscita: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --z-tavolo: 1; --z-carte: 2; --z-targhe: 3; --z-volo: 5; --z-cassetto: 8; --z-velo: 10; --z-toast: 12;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--calce);
+  color: var(--inchiostro);
+  font-family: var(--f-corpo);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, select { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; font-family: var(--f-titolo); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+h2 { font-size: 1.7rem; font-variation-settings: 'opsz' 60; }
+h3 { font-size: 1.1rem; margin-top: var(--sp-4); }
+p { margin: 0; }
+code { font-family: var(--f-corpo); font-weight: 600; }
+em { font-style: normal; font-weight: 400; color: var(--muto); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--limone); outline-offset: 2px; }
+svg { display: block; }
+
+.nota { font-size: 0.92rem; color: var(--inchiostro-2); }
+.nota.centro { text-align: center; }
+.errore { color: var(--terracotta); font-size: 0.95rem; font-weight: 600; }
+.sopratitolo { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cobalto); }
+.chip { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; background: var(--cobalto); color: var(--bianco); font-weight: 800; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+.chip.tenue { background: var(--calce-2); color: var(--inchiostro-2); letter-spacing: 0; font-weight: 600; }
+.pallino { position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--terracotta); border: 2px solid var(--calce); }
+
+/* ── bottoni: tre corsie, una sola primaria per schermata ───────── */
+.bottone {
+  min-height: var(--tocco);
+  padding: 0 var(--sp-5);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--veloce) var(--uscita), background-color var(--veloce), border-color var(--veloce), box-shadow var(--veloce);
+}
+.bottone:active { transform: scale(0.97); }
+.bottone:disabled { opacity: 0.4; cursor: default; transform: none; }
+.bottone.primario { background: var(--cobalto); color: var(--bianco); box-shadow: 0 6px 18px var(--ombra); }
+.bottone.primario:hover:not(:disabled) { background: var(--cobalto-scuro); }
+.bottone.secondario { border-color: var(--inchiostro); color: var(--inchiostro); }
+.bottone.secondario:hover:not(:disabled) { background: var(--cobalto-velo); }
+.bottone.terziario { color: var(--cobalto); padding: 0 var(--sp-3); min-height: 40px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: transparent; }
+.bottone.terziario:hover:not(:disabled) { text-decoration-color: var(--limone); }
+.bottone.piccolo { min-height: 38px; padding: 0 var(--sp-4); font-size: 0.92rem; }
+.bottone.icona { position: relative; width: var(--tocco); height: var(--tocco); padding: 0; border-color: var(--calce-3); background: var(--bianco); display: inline-flex; align-items: center; justify-content: center; }
+.bottone.icona svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bottone.icona[aria-pressed="true"] { border-color: var(--cobalto); color: var(--cobalto); }
+.riga-bottoni { display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: center; align-items: center; margin-top: var(--sp-4); }
+.riga-bottoni.sinistra { justify-content: flex-start; margin-top: var(--sp-2); }
+
+/* ── campi ─────────────────────────────────────────────────────── */
+.campo { display: flex; flex-direction: column; gap: var(--sp-1); }
+.campo span { font-size: 0.85rem; font-weight: 600; color: var(--inchiostro-2); }
+input:not([type="checkbox"]), select {
+  min-height: var(--tocco);
+  padding: 0 var(--sp-4);
+  border-radius: var(--r-m);
+  border: 2px solid var(--calce-3);
+  background: var(--bianco);
+  color: var(--inchiostro);
+  width: 100%;
+  transition: border-color var(--veloce);
+}
+input:focus, select:focus { border-color: var(--cobalto); outline: none; }
+input::placeholder { color: var(--muto); }
+input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--cobalto); flex: 0 0 auto; }
+
+/* ── schermi ───────────────────────────────────────────────────── */
+.schermo { display: none; min-height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+.schermo.attivo { display: flex; flex-direction: column; }
+
+/* ── la carta ──────────────────────────────────────────────────── */
+.carta { position: relative; aspect-ratio: 200 / 320; border-radius: 6.5% / 4%; user-select: none; -webkit-user-drag: none; }
+.carta-fronte, .carta-retro { position: absolute; inset: 0; border-radius: inherit; }
+.carta svg, .carta img { width: 100%; height: 100%; display: block; border-radius: inherit; object-fit: cover; }
+.carta-retro { display: none; }
+.carta.coperta .carta-fronte { display: none; }
+.carta.coperta .carta-retro { display: block; }
+
+/* ── tabelle ───────────────────────────────────────────────────── */
+.tabella { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tabella th { font-size: 0.78rem; font-weight: 600; color: var(--muto); text-align: left; padding: 0 var(--sp-2) var(--sp-1); }
+.tabella td { padding: var(--sp-2); border-top: 1px solid var(--calce-3); text-align: left; }
+.tabella .num { text-align: right; font-weight: 700; }
+.tabella tr.totale td { font-weight: 700; border-top: 2px solid var(--inchiostro); }
+
+/* ── toast ─────────────────────────────────────────────────────── */
+.toast {
+  position: fixed; z-index: var(--z-toast); left: 50%; top: calc(env(safe-area-inset-top) + 12px); transform: translateX(-50%);
+  background: var(--inchiostro); color: var(--calce); font-weight: 600; padding: var(--sp-2) var(--sp-4); border-radius: 999px;
+  box-shadow: 0 10px 30px var(--ombra-forte); max-width: calc(100% - 32px); text-align: center;
+  animation: toast var(--medio) var(--uscita);
+}
+.toast.brutto { background: var(--terracotta); color: var(--bianco); }
+@keyframes toast { from { opacity: 0; transform: translateX(-50%) translateY(-8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}

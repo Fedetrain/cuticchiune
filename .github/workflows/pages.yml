@@ -1,0 +1,49 @@
+# Il sito statico su GitHub Pages: si costruisce a ogni push su main.
+#
+# Attenzione: Pages su un repo PRIVATO richiede un piano a pagamento. Con il
+# repo pubblico e' gratis — e il sito non contiene scansioni di mazzi altrui,
+# ci pensa tools/costruisci-sito.mjs a lasciarle fuori.
+#
+# Da accendere una volta sola: Settings → Pages → Source: GitHub Actions.
+
+name: sito
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - run: npm run sito
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sito
+
+  pubblica:
+    needs: costruisci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pubblicazione.outputs.page_url }}
+    steps:
+      - id: pubblicazione
+        uses: actions/deploy-pages@v4

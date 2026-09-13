@@ -1,0 +1,32 @@
+{
+  "name": "cuticchiune",
+  "version": "0.1.0",
+  "description": "Cuticchiune — carte siciliane, quattro giocatori, ognuno per sé. Una stanza, un link, quattro telefoni.",
+  "type": "module",
+  "private": true,
+  "main": "server.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tools/test-cuticchiune.mjs && node tools/test-stanza.mjs && node tools/test-locale.mjs",
+    "test:gioco": "node tools/test-cuticchiune.mjs",
+    "test:stanza": "node tools/test-stanza.mjs",
+    "screenshot": "node tools/screenshot.mjs",
+    "font": "node tools/scarica-font.mjs",
+    "test:locale": "node tools/test-locale.mjs",
+    "sito": "node tools/costruisci-sito.mjs",
+    "mazzo": "node tools/importa-mazzo.mjs"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "qrcode": "^1.5.4",
+    "ws": "^8.21.3"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fedetrain/cuticchiune.git"
+  }
+}
