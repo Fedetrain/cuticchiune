@@ -17,7 +17,8 @@
     "font": "node tools/scarica-font.mjs",
     "test:locale": "node tools/test-locale.mjs",
     "sito": "node tools/costruisci-sito.mjs",
-    "mazzo": "node tools/importa-mazzo.mjs"
+    "mazzo": "node tools/importa-mazzo.mjs",
+    "pubblica": "node tools/pubblica-sito.mjs"
   },
   "dependencies": {
     "express": "^5.2.1",

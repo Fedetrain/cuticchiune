@@ -6,3 +6,4 @@ Carte_da_gioco_siciliane_-_*.jpg
 sito/
 public/assets/mazzo/*
 !public/assets/mazzo/LEGGIMI.txt
+.gh-pages/
