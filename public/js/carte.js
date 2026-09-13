@@ -352,21 +352,39 @@ export function svgCarta(codice) {
 }
 
 /** Il dorso: losanghe cobalto e oro con la cornice avorio, la Trinacria al centro. */
+/**
+ * IL DORSO — quello che si vede di piu', perche' tre mani su quattro sono
+ * coperte. Una maiolica blu e oro come il bordo del tavolo, e al centro un
+ * medaglione con la Trinacria: le carte girate diventano parte della stanza
+ * invece di essere un rettangolo vuoto.
+ */
 export function svgDorso() {
   if (cache.has('dorso')) return cache.get('dorso');
+  // Niente <defs> e niente id: di questo SVG la pagina tiene quaranta copie, e
+  // con gli id ripetuti i riferimenti `url(#…)` si accavallano — il pattern
+  // restava bianco. Le losanghe si scrivono a mano: sono poche, e il disegno
+  // non cambia mai.
+  const P = 26, losanghe = [];
+  for (let y = 12; y < H - 12; y += P) {
+    for (let x = 12; x < W - 12; x += P) {
+      const scura = ((x - 12) / P + (y - 12) / P) % 2 === 0;
+      losanghe.push(`<path d="M${x + P / 2} ${y} L${x + P} ${y + P / 2} L${x + P / 2} ${y + P} L${x} ${y + P / 2} Z" fill="${scura ? T.bluScuro : T.blu}" stroke="${T.oro}" stroke-width="0.7" stroke-opacity="0.55"/>`);
+    }
+  }
+  const stella = (x, y) => `<path transform="translate(${x} ${y})" d="M0 -13 L4 -4 L13 0 L4 4 L0 13 L-4 4 L-13 0 L-4 -4 Z" fill="${T.oro}" stroke="${T.oroScuro}" stroke-width="1.2"/>`;
+
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">
-    <defs>
-      <pattern id="losanghe" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-        <rect width="24" height="24" fill="${T.blu}"/>
-        <rect x="0" y="0" width="12" height="12" fill="${T.bluScuro}"/>
-        <rect x="12" y="12" width="12" height="12" fill="${T.bluScuro}"/>
-        <circle cx="12" cy="12" r="2.2" fill="${T.oro}"/>
-      </pattern>
-    </defs>
     <rect x="3" y="3" width="${W - 6}" height="${H - 6}" rx="14" fill="${T.carta}" stroke="${T.bordo}" stroke-width="3"/>
-    <rect x="14" y="14" width="${W - 28}" height="${H - 28}" rx="8" fill="url(#losanghe)" stroke="${T.oroScuro}" stroke-width="2"/>
-    <circle cx="100" cy="160" r="28" fill="${T.carta}" stroke="${T.oroScuro}" stroke-width="2"/>
-    ${trinacria(100, 160, 0.5)}
+    <svg x="12" y="12" width="${W - 24}" height="${H - 24}" viewBox="12 12 ${W - 24} ${H - 24}">
+      <rect x="12" y="12" width="${W - 24}" height="${H - 24}" fill="${T.blu}"/>
+      ${losanghe.join('')}
+    </svg>
+    <rect x="12" y="12" width="${W - 24}" height="${H - 24}" rx="10" fill="none" stroke="${T.oroScuro}" stroke-width="3"/>
+    <rect x="20" y="20" width="${W - 40}" height="${H - 40}" rx="6" fill="none" stroke="${T.oroChiaro}" stroke-width="1.2" opacity="0.7"/>
+    ${stella(100, 52)}${stella(100, 268)}
+    <circle cx="100" cy="160" r="44" fill="${T.bluScuro}" stroke="${T.oroScuro}" stroke-width="3"/>
+    <circle cx="100" cy="160" r="36" fill="${T.carta}" stroke="${T.oro}" stroke-width="1.5"/>
+    ${trinacria(100, 160, 0.64)}
   </svg>`;
   cache.set('dorso', svg);
   return svg;

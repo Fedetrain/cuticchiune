@@ -57,8 +57,16 @@ const lobby = avviaLobby({ rete, esci, benvenuto: () => benvenuto });
 const partita = avviaPartita({ rete, esci, stato: () => stato });
 collegaVeli({ albo: () => home.caricaAlbo() });
 
-// la scala di forza nelle regole, con le carte vere
-$('#scala-forza').append(...['D3', 'D2', 'D1', 'D10', 'D9', 'D8', 'D7', 'D6', 'D5', 'D4'].map(c => elementoCarta(c)));
+// Gli ornamenti a carte scoperte: il ventaglio della home e la scala di forza
+// nelle regole. Si ridisegnano quando arriva il mazzo fotografico, se no
+// resterebbero i disegni mentre al tavolo si gioca con le foto.
+function disegnaOrnamenti() {
+  const ventaglio = $('.ventaglio');
+  if (ventaglio) { ventaglio.innerHTML = ''; ventaglio.append(...['B3', 'C8', 'D1', 'S10', 'D3'].map(c => elementoCarta(c))); }
+  const scala = $('#scala-forza');
+  if (scala) { scala.innerHTML = ''; scala.append(...['D3', 'D2', 'D1', 'D10', 'D9', 'D8', 'D7', 'D6', 'D5', 'D4'].map(c => elementoCarta(c))); }
+}
+disegnaOrnamenti();
 
 // ─────────────────────────────── messaggi dal server ───────────────────────────────
 
@@ -105,7 +113,7 @@ rete.connetti();
 fetch(STATICO ? 'assets/mazzo/elenco.json' : '/api/mazzo')
   .then(r => r.json())
   .then(m => {
-    if (m?.completo) usaImmagini(m.immagini);
+    if (m?.completo) { usaImmagini(m.immagini); disegnaOrnamenti(); }
     // la licenza delle carte vuole che l'autore si veda: sta nelle regole
     if (m?.crediti) { const p = $('#crediti-mazzo'); p.textContent = m.crediti; p.hidden = false; }
   })

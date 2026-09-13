@@ -3,7 +3,6 @@
 
 import { $, escape, toast, mem } from '../ui.js';
 import { STATICO } from '../ambiente.js';
-import { elementoCarta } from '../carte.js';
 
 export function avviaHome({ rete, entraCon }) {
   const inNome = $('#in-nome');
@@ -31,9 +30,8 @@ export function avviaHome({ rete, entraCon }) {
   });
   $('#btn-pubblica').addEventListener('click', () => { const n = nome(); if (!n) return; errore(''); rete.entra({ t: 'pubblica', nome: n }); });
 
-  // il ventaglio di carte: l'unico ornamento, e sono carte vere
-  const ventaglio = $('.ventaglio');
-  ['B3', 'C8', 'D1', 'S10', 'D3'].forEach(c => ventaglio.appendChild(elementoCarta(c)));
+  // il ventaglio di carte lo disegna app.js (disegnaOrnamenti), perche' va
+  // rifatto quando arriva il mazzo fotografico
 
   // Sul sito statico non esiste un elenco di tavoli aperti: nessuno lo tiene.
   // Si entra con il codice che ti passa chi ha aperto, e basta.
