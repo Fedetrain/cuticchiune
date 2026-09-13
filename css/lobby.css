@@ -1,0 +1,86 @@
+/* LA LOBBY — il biglietto d'invito e il tavolino con le quattro sedie. */
+
+#lobby { max-width: 560px; margin: 0 auto; width: 100%; }
+.lobby-testa { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-3) var(--sp-4); }
+.lobby-corpo { flex: 1; display: flex; flex-direction: column; gap: var(--sp-5); padding: 0 var(--sp-4) var(--sp-4); }
+
+/* il biglietto: calce, bordo di maiolica in alto, codice enorme */
+.biglietto {
+  background: var(--bianco); border-radius: var(--r-l); overflow: hidden;
+  box-shadow: 0 10px 30px var(--ombra);
+  border: 1px solid var(--calce-3);
+}
+.biglietto::before { content: ""; display: block; height: 14px; background: var(--maiolica); background-size: 14px 14px; }
+.biglietto-etichetta { text-align: center; margin-top: var(--sp-3); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cobalto); }
+.codice {
+  text-align: center; font-family: var(--f-titolo); font-weight: 900; font-variation-settings: 'opsz' 144;
+  font-size: clamp(3.4rem, 18vw, 5rem); letter-spacing: 0.14em; line-height: 1; color: var(--cobalto);
+  padding: 0 var(--sp-3) var(--sp-3); margin-left: 0.14em;
+}
+.biglietto-invito { display: flex; gap: var(--sp-4); align-items: center; padding: var(--sp-3) var(--sp-4) var(--sp-4); border-top: 1px dashed var(--calce-3); }
+.qr { width: 112px; height: 112px; flex: 0 0 auto; border-radius: var(--r-s); background: var(--bianco); }
+.biglietto-testo { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; font-size: 0.92rem; color: var(--inchiostro-2); }
+.biglietto-testo code { font-size: 0.85rem; color: var(--inchiostro); word-break: break-all; }
+
+/* il tavolino: una tovaglia cobalto al centro, quattro sedie attorno */
+.tavolino {
+  display: grid; grid-template-columns: 1fr minmax(120px, 160px) 1fr; grid-template-rows: auto minmax(110px, 150px) auto;
+  gap: var(--sp-2); align-items: center; justify-items: center;
+}
+.tovaglietta {
+  grid-column: 2; grid-row: 2; width: 100%; height: 100%; border-radius: var(--r-m);
+  background: var(--cobalto); box-shadow: inset 0 0 0 4px var(--bianco), inset 0 0 0 6px var(--cobalto), 0 8px 20px var(--ombra);
+}
+.sedia { min-width: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.sedia[data-lato="nord"] { grid-column: 2; grid-row: 1; }
+.sedia[data-lato="sud"] { grid-column: 2; grid-row: 3; }
+.sedia[data-lato="ovest"] { grid-column: 1; grid-row: 2; }
+.sedia[data-lato="est"] { grid-column: 3; grid-row: 2; }
+.sedia-nome, .sedia-libera {
+  width: 100%; max-width: 170px; min-height: 60px; padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-m); border: 2px solid var(--calce-3); background: var(--bianco);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center;
+}
+.sedia-libera { border-style: dashed; color: var(--muto); cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+.sedia-libera:hover { border-color: var(--cobalto); color: var(--cobalto); }
+.sedia.io .sedia-nome { border-color: var(--cobalto); box-shadow: 0 0 0 3px var(--cobalto-velo); }
+.sedia.bot .sedia-nome { border-style: dotted; }
+.sedia .num { font-family: var(--f-titolo); font-weight: 900; font-size: 0.9rem; color: var(--muto); }
+.sedia-nome strong { font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sedia-nome .stato { font-size: 0.78rem; color: var(--inchiostro-2); }
+.sedia-azione { min-height: 30px; padding: 0 var(--sp-3); border-radius: 999px; border: 0; background: transparent; color: var(--cobalto); font-weight: 700; font-size: 0.82rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+.opzioni { border-radius: var(--r-m); border: 2px solid var(--calce-3); background: var(--bianco); padding: var(--sp-1) var(--sp-4); }
+.opzioni summary { cursor: pointer; font-weight: 700; min-height: 40px; display: flex; align-items: center; list-style: none; }
+.opzioni summary::-webkit-details-marker { display: none; }
+.opzioni summary::after { content: "+"; margin-left: auto; font-family: var(--f-titolo); font-size: 1.4rem; color: var(--cobalto); }
+.opzioni[open] summary::after { content: "–"; }
+.opzioni.sola-lettura summary::before { content: "solo il padrone di casa · "; font-weight: 400; color: var(--muto); font-size: 0.85rem; margin-right: var(--sp-1); }
+.opzione { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); min-height: var(--tocco); border-top: 1px solid var(--calce-2); }
+.opzione span { font-size: 0.95rem; }
+.opzione select { width: auto; min-height: 36px; padding: 0 var(--sp-3); }
+
+.lobby-piede { display: flex; flex-direction: column; align-items: center; gap: var(--sp-3); padding: var(--sp-4); }
+.lobby-piede .bottone.primario { width: 100%; max-width: 360px; }
+
+/* ── rifiniture: il tavolino diventa un tavolo vero ─────────────── */
+
+/* stessa maiolica e stesso sole del tavolo da gioco, in piccolo: la lobby
+ * smette di essere un rettangolo blu e diventa l'anticamera della partita */
+.tovaglietta {
+  position: relative; overflow: hidden;
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,0.35),
+    inset 0 0 0 4px rgba(224,169,42,0.30),
+    inset 0 0 24px rgba(0,0,0,0.28),
+    0 10px 24px var(--ombra-forte);
+}
+.tovaglietta::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22s%22%20cx%3D%2250%25%22%20cy%3D%2250%25%22%20r%3D%2250%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22white%22%20stop-opacity%3D%22.55%22%2F%3E%3Cstop%20offset%3D%2255%25%22%20stop-color%3D%22white%22%20stop-opacity%3D%22.18%22%2F%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22white%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22url(%23s)%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Cg%20mask%3D%22url(%23m)%22%20opacity%3D%22.5%22%3E%3Cline%20x1%3D%22116.0%22%20y1%3D%22100.0%22%20x2%3D%22192.0%22%20y2%3D%22100.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22115.5%22%20y1%3D%22104.1%22%20x2%3D%22188.9%22%20y2%3D%22123.8%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22113.9%22%20y1%3D%22108.0%22%20x2%3D%22179.7%22%20y2%3D%22146.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22111.3%22%20y1%3D%22111.3%22%20x2%3D%22165.1%22%20y2%3D%22165.1%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22108.0%22%20y1%3D%22113.9%22%20x2%3D%22146.0%22%20y2%3D%22179.7%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22104.1%22%20y1%3D%22115.5%22%20x2%3D%22123.8%22%20y2%3D%22188.9%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22100.0%22%20y1%3D%22116.0%22%20x2%3D%22100.0%22%20y2%3D%22192.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2295.9%22%20y1%3D%22115.5%22%20x2%3D%2276.2%22%20y2%3D%22188.9%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%22113.9%22%20x2%3D%2254.0%22%20y2%3D%22179.7%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2288.7%22%20y1%3D%22111.3%22%20x2%3D%2234.9%22%20y2%3D%22165.1%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2286.1%22%20y1%3D%22108.0%22%20x2%3D%2220.3%22%20y2%3D%22146.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2284.5%22%20y1%3D%22104.1%22%20x2%3D%2211.1%22%20y2%3D%22123.8%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2284.0%22%20y1%3D%22100.0%22%20x2%3D%228.0%22%20y2%3D%22100.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2284.5%22%20y1%3D%2295.9%22%20x2%3D%2211.1%22%20y2%3D%2276.2%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2286.1%22%20y1%3D%2292.0%22%20x2%3D%2220.3%22%20y2%3D%2254.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2288.7%22%20y1%3D%2288.7%22%20x2%3D%2234.9%22%20y2%3D%2234.9%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2292.0%22%20y1%3D%2286.1%22%20x2%3D%2254.0%22%20y2%3D%2220.3%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%2295.9%22%20y1%3D%2284.5%22%20x2%3D%2276.2%22%20y2%3D%2211.1%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22100.0%22%20y1%3D%2284.0%22%20x2%3D%22100.0%22%20y2%3D%228.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22104.1%22%20y1%3D%2284.5%22%20x2%3D%22123.8%22%20y2%3D%2211.1%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22108.0%22%20y1%3D%2286.1%22%20x2%3D%22146.0%22%20y2%3D%2220.3%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22111.3%22%20y1%3D%2288.7%22%20x2%3D%22165.1%22%20y2%3D%2234.9%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22113.9%22%20y1%3D%2292.0%22%20x2%3D%22179.7%22%20y2%3D%2254.0%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Cline%20x1%3D%22115.5%22%20y1%3D%2295.9%22%20x2%3D%22188.9%22%20y2%3D%2276.2%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2213%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat 50% 50%;
+  background-size: 62% auto;
+}
+
+/* la sedia di chi ospita porta la corona; quella di chi e' pronto, il verde */
+.sedia.padrone .sedia-nome { box-shadow: 0 0 0 2px rgba(224,169,42,0.55); }
+.sedia-libera:hover { background: var(--cobalto-velo); }

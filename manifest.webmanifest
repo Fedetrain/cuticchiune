@@ -1,0 +1,12 @@
+{
+  "name": "Cuticchiune",
+  "short_name": "Cuticchiune",
+  "description": "Carte siciliane a quattro, ognuno per sé. Una stanza, un link.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f2e8",
+  "theme_color": "#1f4fa3",
+  "lang": "it",
+  "icons": [{ "src": "icona.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

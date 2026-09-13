@@ -1,0 +1,21 @@
+LE CARTE DI QUESTO MAZZO — da dove vengono
+
+Le 40 immagini (D1 … B10) vengono dalla raccolta «Carte Siciliane in
+transparent png file» pubblicata da mauriziogrillo su DeviantArt (2015), 40 png
+1000x1600. Qui sono state solo riscalate a 500x800 e salvate in webp
+(tools/importa-mazzo.mjs).
+
+Sull'asso di denari si legge «Fabbrica Carte da Giuoco Dal Negro - Treviso»:
+il disegno e' quello del mazzo siciliano tradizionale, ma questa resa e' di Dal
+Negro, e chi ha pubblicato i file non ha dichiarato nessuna licenza. Quindi:
+non c'e' un permesso scritto di usarle. Il proprietario del progetto lo sa e ha
+scelto lo stesso di tenerle — gioco senza scopo di lucro, nessuna vendita, e la
+firma del fabbricante e' rimasta dov'era, non e' stata cancellata.
+
+Se un giorno arriva una richiesta di rimuoverle, si tolgono e si torna alle
+carte libere: basta rimettere in questa cartella le scansioni Wikimedia con
+  node tools/ritaglia-fogli.mjs <cartella-coi-quattro-fogli>
+(«Carte da gioco siciliane» di Matsoftware, CC BY-SA 3.0), oppure svuotare la
+cartella e lasciare che il gioco disegni le sue carte da solo (public/js/carte.js).
+
+BREVE: Carte: raccolta di mauriziogrillo (DeviantArt); mazzo siciliano Dal Negro.
