@@ -209,3 +209,13 @@
   :root { --carta-w: clamp(100px, 9.5vw, 168px); }
   #centro { width: calc(var(--carta-w) * 3.2); }
 }
+
+/* Il ventaglio che si apre sulla carta scelta: le vicine si scostano e la
+ * carta si vede tutta — nel ventaglio chiuso un re e' una striscia, e non si
+ * capisce se e' di spade o di mazze. */
+#mia-mano .carta.scostata-sx { transform: rotate(var(--rot, 0deg)) translate(-22px, var(--giu, 0px)); }
+#mia-mano .carta.scostata-dx { transform: rotate(var(--rot, 0deg)) translate(22px, var(--giu, 0px)); }
+#mia-mano.attesa .carta.scostata-sx { transform: rotate(var(--rot, 0deg)) translate(-22px, calc(var(--giu, 0px) + 8px)); }
+#mia-mano.attesa .carta.scostata-dx { transform: rotate(var(--rot, 0deg)) translate(22px, calc(var(--giu, 0px) + 8px)); }
+/* la scelta resta sopra a tutte, anche a quelle che le stanno addosso */
+#mia-mano .carta.scelta { z-index: 3; }

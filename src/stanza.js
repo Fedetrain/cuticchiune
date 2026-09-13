@@ -20,7 +20,8 @@ import { codiceStanza, token as nuovoToken, id as nuovoId, now, pulisciNome, pul
 
 /** I tempi della stanza, in millisecondi. Un solo posto per cambiarli. */
 export const RITMO = {
-  presaInVista: 1500,       // la presa resta sul tavolo prima di andare a chi l'ha vinta
+  presaInVista: 2300,       // la presa resta sul tavolo prima di andare a chi l'ha vinta:
+                            // la quarta carta deve avere il tempo di farsi guardare
   fineMano: 9000,           // il verdetto della mano resta a schermo (il padrone può saltare)
   primaCartaBot: 900,       // il bot «pensa» un attimo prima di giocare
   cartaBot: 1300,
@@ -32,7 +33,8 @@ export const RITMO = {
 const OPZIONI_DEFAULT = {
   timerTurno: 45,           // secondi; 0 = spento
   botPerICaduti: true,      // se uno cade, dopo la grazia gioca il bot al suo posto
-  puntiInChiaro: true,      // i punti presi in corso di mano sono visibili a tutti
+  puntiInChiaro: false,     // i punti si contano a mente: e' meta' del gioco.
+                            // Chi vuole il tabellone lo accende dalle opzioni.
   pubblica: false,          // compare nelle partite pubbliche
 };
 
@@ -45,6 +47,20 @@ export const EMOTE = [
   { id: 'salvu',    testo: 'Mi sarvai!' },
   { id: 'sfurtuna', testo: 'Sfurtuna nìura' },
   { id: 'avanti',   testo: 'Avà, joca!' },
+  // le frasi che si sentono davvero al tavolo
+  { id: 'banna',    testo: 'A 10 chiamamo a banna' },
+  { id: 'rincorsa', testo: 'Ora piglia a rincorsa' },
+  { id: 'regalo',   testo: 'All’ultimo c’è regalo' },
+  { id: 'sula',     testo: 'Carta a sula, levala allura' },
+  { id: 'sarvarisi',testo: 'A prima regola è sarvarisi' },
+  { id: 'applauso', testo: 'A mumento c’è applauso' },
+  { id: 'taggiusto',testo: 'Ora t’aggiusto io!' },
+  { id: 'napoli',   testo: 'Napoliiii' },
+  { id: 'soffia',   testo: 'Soffia cca!' },
+  { id: 'antenne',  testo: 'Antennee!' },
+  { id: 'arso',     testo: 'Arso ncapo, arso no!' },
+  { id: 'calano',   testo: 'Minchia comu si calano!' },
+  { id: 'accussi',  testo: 'Seee ora ti fazzo sarvare accussì!' },
 ];
 
 export class Stanza {
@@ -365,6 +381,7 @@ export class Stanza {
       prossimoApre: this.partita.prossimoApre,
       prese: this.mano.prese.map(p => p.slice()),
       storico: this.mano.storico,
+      bonusUltima: this.mano.bonusUltima,   // chi ha pigliato l’ultima presa (+3)
     };
     this.diario.push({ t: now(), tipo: 'mano', numero: this.numeroMano, ...risultato, singhe: this.partita.singhe.slice() });
     if (esito) {

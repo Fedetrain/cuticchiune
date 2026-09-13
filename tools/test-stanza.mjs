@@ -210,7 +210,7 @@ await test('la partita si gioca fino in fondo: mani, singhe, fine, classifica, a
     if (host.stato.fase === 'fine-mano' && host.stato.fineMano.numeroMano !== ultimoMano) {
       ultimoMano = host.stato.fineMano.numeroMano;
       const f = host.stato.fineMano;
-      assert.equal(f.punti.reduce((a, b) => a + b, 0), 32);
+      assert.equal(f.punti.reduce((a, b) => a + b, 0), 35);   // 32 nelle carte + 3 all’ultima presa
       assert.ok(f.perdenti.length >= 1);
       assert.equal(f.singhe.reduce((a, b) => a + b, 0), host.stato.partita.mani.reduce((a, m) => a + m.perdenti.length, 0));
       host.invia({ t: 'avanti' });   // il padrone salta l'attesa

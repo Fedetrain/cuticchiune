@@ -18,6 +18,9 @@ import { mazzoNuovo, mescola, semeDi, forzaDi, puntiDi, carta } from './mazzo.js
 export const N = 4;
 export const CARTE_A_TESTA = 10;
 export const SINGHE_PARTITA = 10;   // un giocatore a 10 singhe: finita
+/** Chi piglia l'ULTIMA presa si prende tre punti in piu'. E' la regola che
+ *  ribalta le mani: si arriva in fondo con la carta buona o si paga. */
+export const PUNTI_ULTIMA = 3;
 export const SINGHE_COPPIA = 5;     // due giocatori a 5 singhe: finita
 
 export function prossimo(posto) { return (posto + 1) % N; }
@@ -44,6 +47,7 @@ export function nuovaMano({ apre = null, rnd = Math.random } = {}) {
     nPrese: [0, 0, 0, 0],       // quante prese ha fatto ciascuno
     numeroPresa: 0,             // prese chiuse (0..10)
     ultimaPresa: null,          // {carte, vincitore, punti}
+    bonusUltima: null,          // chi ha pigliato l'ultima presa: +3 punti
     storico: [],
     finita: false,
     apertaDa: apre,             // chi ha aperto la mano (per il diario)
@@ -51,7 +55,8 @@ export function nuovaMano({ apre = null, rnd = Math.random } = {}) {
 }
 
 export function puntiPresiDa(m, posto) {
-  return m.prese[posto].reduce((s, c) => s + puntiDi(c), 0);
+  const carte = m.prese[posto].reduce((s, c) => s + puntiDi(c), 0);
+  return carte + (m.bonusUltima === posto ? PUNTI_ULTIMA : 0);
 }
 
 /**
@@ -117,6 +122,8 @@ export function gioca(m, posto, c) {
   if (m.mani.every(h => h.length === 0)) {
     m.finita = true;
     m.turno = -1;
+    m.bonusUltima = vincitore;          // i tre punti dell'ultima presa
+    esito.presa.bonus = PUNTI_ULTIMA;
     esito.fine = risultatoMano(m);
   }
   return esito;

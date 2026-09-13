@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { mazzoNuovo, prng, puntiDi, forzaDi, PUNTI_TOTALI, nomeDi, ordinaMano } from '../src/mazzo.js';
 import {
   nuovaMano, gioca, vincitorePresa, risultatoMano, mosseValide, vistaMano,
-  nuovaPartita, applicaMano, controllaFine, chiApreDopo, classifica,
+  nuovaPartita, applicaMano, controllaFine, chiApreDopo, classifica, PUNTI_ULTIMA,
 } from '../src/cuticchiune.js';
 import { scegli, aCaso } from '../src/bot.js';
 
@@ -24,7 +24,7 @@ function manoFissa(mani, apre) {
 }
 
 console.log('mazzo');
-test('40 carte, tutte diverse, 32 punti (la tabella della specifica somma a 32, non 35)', () => {
+test('40 carte, tutte diverse, 32 punti nelle carte (con i 3 dell’ultima presa fanno 35)', () => {
   const m = mazzoNuovo();
   assert.equal(m.length, 40);
   assert.equal(new Set(m).size, 40);
@@ -79,7 +79,7 @@ test('non si gioca fuori turno né carte che non si hanno', () => {
   assert.equal(gioca(m, altro, m.mani[altro][0]).ok, false);
   assert.equal(gioca(m, m.apre, 'ZZ').ok, false);
 });
-test('mano completa: 10 prese, 32 punti distribuiti, fine con verdetto', () => {
+test('mano completa: 10 prese, 35 punti distribuiti (32 piu’ l’ultima presa), fine con verdetto', () => {
   const m = nuovaMano({ rnd: prng(5) });
   let fine = null;
   while (!m.finita) {
@@ -89,7 +89,7 @@ test('mano completa: 10 prese, 32 punti distribuiti, fine con verdetto', () => {
   }
   assert.equal(m.numeroPresa, 10);
   assert.ok(fine);
-  assert.equal(fine.punti.reduce((a, b) => a + b, 0), PUNTI_TOTALI);
+  assert.equal(fine.punti.reduce((a, b) => a + b, 0), PUNTI_TOTALI + PUNTI_ULTIMA);
   assert.equal(fine.nPrese.reduce((a, b) => a + b, 0), 10);
   assert.ok(fine.perdenti.length >= 1);
 });
@@ -203,7 +203,7 @@ test('se non ha mai preso e la presa è povera, da ultimo la prende', () => {
   gioca(m, 0, 'D4'); gioca(m, 1, 'D5'); gioca(m, 2, 'D6');
   assert.equal(scegli(m, 3), 'D7', 'prende con la più economica fra le vincenti');
 });
-test('1000 mani fra bot: sempre 32 punti, 10 prese, nessun errore', () => {
+test('1000 mani fra bot: sempre 35 punti, 10 prese, nessun errore', () => {
   const rnd = prng(2026);
   const zeroPrese = [0, 0, 0, 0];
   for (let i = 0; i < 1000; i++) {
@@ -213,7 +213,7 @@ test('1000 mani fra bot: sempre 32 punti, 10 prese, nessun errore', () => {
       if (!e.ok) throw new Error(e.errore);
     }
     const r = risultatoMano(m);
-    assert.equal(r.punti.reduce((a, b) => a + b, 0), PUNTI_TOTALI);
+    assert.equal(r.punti.reduce((a, b) => a + b, 0), PUNTI_TOTALI + PUNTI_ULTIMA);
     assert.equal(m.prese.flat().length, 40);
     if (r.motivo === 'zero-prese') zeroPrese[r.perdenti.length]++;
   }

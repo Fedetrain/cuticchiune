@@ -33,8 +33,8 @@ stanza rispetta `X-Forwarded-Host` e `X-Forwarded-Proto`).
 | **Posti vuoti** | li prendono i **bot** («Turi», «Cicciu», «Nzino»…). Il padrone può aggiungerli a mano o lasciare che «Inizia» li chiami |
 | **Spettatori** | chi arriva a tavolo pieno guarda; alla partita dopo può sedersi |
 | **Cade la linea** | si rientra dallo stesso link con lo stesso posto e le stesse carte. Dopo 12 s il **bot gioca al posto di chi è caduto**, e gli restituisce la mano appena torna |
-| **Opzioni** (padrone) | tempo per mossa (0/20/45/90 s), punti in chiaro durante la mano, bot per i caduti, tavolo pubblico |
-| **Al tavolo** | chat, otto emote in siciliano che compaiono come fumetti, «ultima presa», le prese della mano, le regole sempre a portata |
+| **Opzioni** (padrone) | tempo per mossa (0/20/45/90 s), punti in chiaro durante la mano (**di serie spenti**), bot per i caduti, tavolo pubblico |
+| **Al tavolo** | chat, **ventuno frasi** siciliane che compaiono come fumetti («Napoliiii», «Soffia cca!», «All’ultimo c’è regalo»…), «ultima presa», le prese della mano, le regole sempre a portata |
 | **Fine partita** | classifica, chi si salva, chi perde, chi «esce franco»; **Rivincita** (quando tutti gli umani seduti la chiedono) o «Torna al tavolo» per cambiare posti |
 | **Albo** | il server tiene in `dati/albo.json` partite, salvezze e singhe di ogni nome umano |
 | **Audio** | tutto sintetizzato (Web Audio, nessun file): la carta che scivola, la presa, «tocca a te», la singa. Parte muto, si accende dal bottone |
@@ -61,9 +61,12 @@ La mano è un ventaglio; la targa di chi deve giocare diventa gialla.
 
 - **Mazzo**: 40 carte siciliane, 4 semi (denari, coppe, spade, bastoni), valori
   asso, 2–7, donna, cavallo, re. **10 carte a testa**, niente tallone.
-- **Punti presa**: asso **3**; due, tre, donna, cavallo, re **1**; 4-5-6-7 **0**.
-  In tutto il mazzo **32 punti**. *(La specifica dice «35»: la somma della sua
-  stessa tabella fa 32 — 4 semi × (3+1+1+1+1+1). Si è seguita la tabella.)*
+- **Punti presa**: asso **3**; due, tre, donna, cavallo, re **1**; 4-5-6-7 **0** —
+  **32 punti** nelle carte. Chi piglia l’**ultima presa** ne prende **3 in più**:
+  in tutto **35 punti a mano**, ed è così che torna il numero della specifica.
+- **I punti non si vedono**: durante la mano le targhe mostrano solo le prese.
+  Tenerli a mente è metà del gioco; chi vuole il tabellone lo accende dalle
+  opzioni del tavolo (*punti in chiaro*).
 - **Forza** (chi prende): **tre > due > asso > re > cavallo > donna > 7 > 6 > 5 > 4**.
   L'asso vale più di tutti ma nella presa è solo terzo.
 - **Obbligo di seme**: se hai il seme d'apertura devi rispondere; se non ce

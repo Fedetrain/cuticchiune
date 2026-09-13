@@ -91,7 +91,9 @@ export function avviaPartita({ rete, esci, stato }) {
         const perde = f.perdenti.includes(p);
         return `<tr class="${perde ? 'perde' : ''} ${p === io ? 'io' : ''}"><td>${escape(nomi[p])}${p === io ? ' <em>tu</em>' : ''}</td><td class="num">${f.nPrese[p]}</td><td class="num">${f.punti[p]}</td><td class="num">${f.singhe[p] - (perde ? 1 : 0)}${perde ? ' <span class="segno">+1</span>' : ''}</td></tr>`;
       }).join('');
-    $('#fm-prossima').textContent = `Prossima mano: apre ${nomi[f.prossimoApre]}.`;
+    // i tre punti dell'ultima presa vanno detti, se no la tabella non torna
+    const ultima = f.bonusUltima != null ? ` L'ultima presa l'ha pigliata ${nomi[f.bonusUltima]}: tre punti in più.` : '';
+    $('#fm-prossima').textContent = `Prossima mano: apre ${nomi[f.prossimoApre]}.${ultima}`;
     $('#btn-avanti').hidden = !s.io.host;
     if (nuovo) { if (f.perdenti.includes(io)) audio.suoni.perso(); else audio.suoni.singa(); }
   }

@@ -148,10 +148,12 @@ export class Tavolo {
       el.style.setProperty('--giu', `${(k * k * 0.45).toFixed(1)}px`);
       el.classList.toggle('non-valida', mioTurno && !valide.has(codice));
       el.classList.toggle('scelta', this.scelta === codice && mioTurno);
+      el.style.zIndex = this.scelta === codice && mioTurno ? '2' : '';
       el.setAttribute('aria-disabled', mioTurno && !valide.has(codice) ? 'true' : 'false');
       prev = el;
     });
     if (!mioTurno) this.scelta = null;
+    this.apriVentaglio();
   }
 
   renderSuggerimento(s) {
@@ -186,7 +188,22 @@ export class Tavolo {
     }
     if (this.scelta === codice) { this.scelta = null; this.onGioca(codice); return; }
     this.scelta = codice;
-    this.miaMano.querySelectorAll('.carta').forEach(c => c.classList.toggle('scelta', c.dataset.carta === codice));
+    this.apriVentaglio();
+  }
+
+  /**
+   * Il ventaglio si apre sulla carta scelta: quella si alza, le altre si
+   * scostano di lato. Nel ventaglio chiuso di un re si vede solo una striscia,
+   * e non si capisce se e' di spade o di mazze: cosi' invece si vede tutta.
+   */
+  apriVentaglio() {
+    const carte = [...this.miaMano.children];
+    const scelto = carte.findIndex(c => c.dataset.carta === this.scelta);
+    carte.forEach((c, i) => {
+      c.classList.toggle('scelta', i === scelto);
+      c.classList.toggle('scostata-sx', scelto >= 0 && i < scelto);
+      c.classList.toggle('scostata-dx', scelto >= 0 && i > scelto);
+    });
   }
 
   // ─────────────────────────────── animazioni ───────────────────────────────
@@ -256,8 +273,8 @@ export class Tavolo {
     const anim = el.animate([
       { transform: `translate(${da.x - a.x}px, ${da.y - a.y}px) rotate(${giro}deg)`, opacity: 0.6 },
       { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
-    ], { duration: 360, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
-    const rete = setTimeout(() => el.classList.remove('in-volo'), 800);
+    ], { duration: 620, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+    const rete = setTimeout(() => el.classList.remove('in-volo'), 1100);
     anim.finished.finally(() => { clearTimeout(rete); el.classList.remove('in-volo'); });
   }
 
