@@ -41,6 +41,13 @@ function copia(da, a, profondita = 0) {
     const ext = path.extname(voce.name);
     if (TESTI.has(ext)) {
       fs.writeFileSync(path.join(a, voce.name), relativizza(fs.readFileSync(dentro, 'utf8'), profondita));
+    } else if (ext === '.js') {
+      // Nel repo il motore sta un piano piu' su di public/ (public/js/x.js →
+      // ../../src). Nel sito compilato sta dentro, accanto a js/ (→ ../src).
+      // Sotto un sottodominio di progetto la differenza non e' teorica:
+      // ../../src finirebbe fuori dal sito, sulla radice del dominio.
+      fs.writeFileSync(path.join(a, voce.name),
+        fs.readFileSync(dentro, 'utf8').replace(/(['"])\.\.\/\.\.\/src\//g, '$1../src/'));
     } else {
       fs.copyFileSync(dentro, path.join(a, voce.name));
     }
@@ -69,6 +76,21 @@ if (!html.includes('CUTICCHIUNE_STATICO')) {
 fs.writeFileSync(path.join(DEST, '.nojekyll'), '');
 // chi apre il link di un tavolo con un percorso che non esiste torna alla home
 fs.copyFileSync(pagina, path.join(DEST, '404.html'));
+
+// Controllo: ogni import deve puntare a un file che nel sito c'e' davvero.
+// Sotto un sottodominio di progetto un percorso sbagliato non da' errore in
+// pagina, semplicemente il modulo non carica e non funziona piu' niente.
+(function controllaImport(cartella) {
+  for (const v of fs.readdirSync(cartella, { withFileTypes: true })) {
+    const f = path.join(cartella, v.name);
+    if (v.isDirectory()) { controllaImport(f); continue; }
+    if (path.extname(v.name) !== '.js') continue;
+    for (const m of fs.readFileSync(f, 'utf8').matchAll(/from\s+['"](\.[^'"]+)['"]/g)) {
+      const meta = path.resolve(path.dirname(f), m[1]);
+      if (!fs.existsSync(meta)) throw new Error(`${path.relative(DEST, f)} importa ${m[1]}, che nel sito non esiste`);
+    }
+  }
+})(DEST);
 
 const quanti = (function conta(d) {
   return fs.readdirSync(d, { withFileTypes: true })
