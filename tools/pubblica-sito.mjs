@@ -32,6 +32,9 @@ for (const v of fs.readdirSync(LAVORO)) {
 fs.cpSync(SITO, LAVORO, { recursive: true });
 
 const gitLi = (...a) => execFileSync('git', a, { cwd: LAVORO, stdio: 'inherit' });
+// il branch locale della volta scorsa non serve a niente: la storia vera e'
+// quella su origin, e qui ogni pubblicazione riparte da zero
+try { git('branch', '-D', BRANCH); } catch {}
 gitLi('checkout', '--orphan', BRANCH);
 gitLi('add', '-A');
 gitLi('-c', 'user.name=Fedetrain', '-c', 'user.email=132400671+Fedetrain@users.noreply.github.com',
