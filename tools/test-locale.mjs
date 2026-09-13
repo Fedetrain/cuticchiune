@@ -136,6 +136,45 @@ await test('due al tavolo: chi ospita e chi arriva vedono lo stesso stato', asyn
   padrone.rete.chiudi();
 });
 
+await test('la presa resta sul tavolo con tutte e quattro le carte', async () => {
+  // Il difetto: il motore sgombera il tavolo appena la presa si chiude, e lo
+  // stato partiva col tavolo vuoto — la carta dell'ultimo non si vedeva mai.
+  const lento = { ...tempi, presaInVista: 600 };
+  const c = { ...client(), rete: null };
+  const rete = new ReteLocale({ tempi: lento, link: (x) => `https://esempio/#/s/${x}` });
+  let stato = null;
+  rete.on('stato', (s) => { stato = s; });
+  rete.entra({ t: 'crea', nome: 'Federico' });
+  const attendi = (pred, ms = 4000) => new Promise((ok, ko) => {
+    const t0 = Date.now();
+    const guarda = () => {
+      if (stato && pred(stato)) return ok(stato);
+      if (Date.now() - t0 > ms) return ko(new Error('timeout'));
+      setTimeout(guarda, 5);
+    };
+    guarda();
+  });
+  await attendi(s => s.fase === 'attesa');
+  for (let i = 0; i < 3; i++) rete.invia({ t: 'bot' });
+  await attendi(s => s.posti.every(p => p));
+  rete.invia({ t: 'avvia' });
+  await attendi(s => s.fase === 'partita');
+
+  // gioco quando tocca a me, finche' non si chiude la prima presa
+  const t0 = Date.now();
+  let vistoInVista = null;
+  while (Date.now() - t0 < 8000 && !vistoInVista) {
+    const s = stato;
+    if (s.presaInVista && s.mano) vistoInVista = s.mano.tavolo;
+    else if (s.mano && s.mano.turno === s.io.posto && s.mano.valide?.length) rete.invia({ t: 'gioca', carta: s.mano.valide[0] });
+    await new Promise(r => setTimeout(r, 5));
+  }
+  assert.ok(vistoInVista, 'la presa deve restare in vista');
+  assert.equal(vistoInVista.length, 4, `sul tavolo ci devono stare tutte e quattro le carte, ce ne sono ${vistoInVista.length}`);
+  assert.equal(new Set(vistoInVista.map(v => v.posto)).size, 4, 'una per giocatore');
+  rete.chiudi();
+});
+
 await test('la quarta carta resta ferma sul tavolo almeno due secondi', () => {
   // Il conto della presa parte quando la quarta carta viene calata, ma quella
   // carta prima deve volare fino al centro: i due numeri stanno in file diversi

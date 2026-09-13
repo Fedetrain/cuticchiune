@@ -507,6 +507,12 @@ export class Stanza {
     const posto = this.postoDi(g.id);
     const mano = this.mano ? vistaMano(this.mano, posto) : null;
     if (mano && !this.opzioni.puntiInChiaro && this.fase === 'partita') mano.punti = null;
+    // LA PRESA RESTA IN VISTA. Il motore, appena la quarta carta chiude la
+    // presa, sgombera il tavolo: e' giusto per le regole, ma lo stato che parte
+    // subito dopo diceva «sul tavolo non c'e' niente» — e la carta dell'ultimo
+    // non si vedeva mai, le quattro sparivano tutte insieme. Finche' dura la
+    // pausa, il tavolo che si manda ai giocatori e' ancora quello della presa.
+    if (mano && this._presaInVista) mano.tavolo = this._presaInVista.carte.slice();
     return { t: 'stato', ...pub, io: { id: g.id, posto, host: this.eHost(g.id), spettatore: posto < 0, nome: g.nome }, mano };
   }
 
