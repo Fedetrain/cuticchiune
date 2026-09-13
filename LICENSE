@@ -29,11 +29,10 @@ Nel repo ci sono anche pezzi di altri, con la loro licenza:
   public/assets/fonts/*.woff2    Fraunces e Figtree — SIL Open Font License 1.1
                                  (vedi LICENZA-OFL.txt nella stessa cartella)
 
-  public/assets/mazzo/*.webp     «Carte da gioco siciliane» di Matsoftware,
-                                 da Wikimedia Commons — CC BY-SA 3.0.
-                                 Ritagliate e riscalate: essendo derivate,
-                                 restano CC BY-SA 3.0 (vedi CREDITI.txt li'
-                                 dentro).
+  public/assets/mazzo/*.webp     raccolta di mauriziogrillo (DeviantArt, 2015),
+                                 mazzo siciliano nella resa Dal Negro. Nessuna
+                                 licenza dichiarata dall'autore della raccolta:
+                                 vedi CREDITI.txt nella stessa cartella.
 
 Le 40 carte disegnate in public/js/carte.js sono invece nostre, e non sono la
 scansione di nessun mazzo in commercio.

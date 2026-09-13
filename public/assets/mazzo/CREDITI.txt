@@ -1,28 +1,21 @@
-LE CARTE DI QUESTO MAZZO — da dove vengono e cosa si puo' farci
+LE CARTE DI QUESTO MAZZO — da dove vengono
 
-Le 40 immagini (D1 … B10) sono ritagli delle quattro scansioni «Carte da gioco
-siciliane» di Matsoftware, da Wikimedia Commons, un foglio per seme:
+Le 40 immagini (D1 … B10) vengono dalla raccolta «Carte Siciliane in
+transparent png file» pubblicata da mauriziogrillo su DeviantArt (2015), 40 png
+1000x1600. Qui sono state solo riscalate a 500x800 e salvate in webp
+(tools/importa-mazzo.mjs).
 
-  https://commons.wikimedia.org/wiki/File:Carte_da_gioco_siciliane_-_denari.jpg
-  https://commons.wikimedia.org/wiki/File:Carte_da_gioco_siciliane_-_coppe.jpg
-  https://commons.wikimedia.org/wiki/File:Carte_da_gioco_siciliane_-_spade.jpg
-  https://commons.wikimedia.org/wiki/File:Carte_da_gioco_siciliane_-_bastoni.jpg
+Sull'asso di denari si legge «Fabbrica Carte da Giuoco Dal Negro - Treviso»:
+il disegno e' quello del mazzo siciliano tradizionale, ma questa resa e' di Dal
+Negro, e chi ha pubblicato i file non ha dichiarato nessuna licenza. Quindi:
+non c'e' un permesso scritto di usarle. Il proprietario del progetto lo sa e ha
+scelto lo stesso di tenerle — gioco senza scopo di lucro, nessuna vendita, e la
+firma del fabbricante e' rimasta dov'era, non e' stata cancellata.
 
-Autore: Matsoftware.
-Licenza: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
-         (in alternativa GFDL 1.2 o successive).
+Se un giorno arriva una richiesta di rimuoverle, si tolgono e si torna alle
+carte libere: basta rimettere in questa cartella le scansioni Wikimedia con
+  node tools/ritaglia-fogli.mjs <cartella-coi-quattro-fogli>
+(«Carte da gioco siciliane» di Matsoftware, CC BY-SA 3.0), oppure svuotare la
+cartella e lasciare che il gioco disegni le sue carte da solo (public/js/carte.js).
 
-Modifiche fatte qui: ogni foglio e' stato tagliato in dieci carte, riscalato a
-500x800 e salvato in webp (tools/ritaglia-fogli.mjs). Essendo opere derivate,
-queste immagini restano sotto la STESSA licenza, CC BY-SA 3.0: chi le riusa
-deve citare l'autore e tenere la stessa licenza.
-
-Attenzione: la licenza vale per queste immagini, non per il resto del
-progetto, che e' MIT (vedi LICENSE).
-
-E' questa presenza di CREDITI.txt che dice a tools/costruisci-sito.mjs di
-portare il mazzo anche nel sito pubblico. Una cartella di scansioni senza
-crediti — per esempio le foto di un mazzo comprato in cartoleria — resta a
-casa, e online si vedono le carte disegnate da public/js/carte.js.
-
-BREVE: Carte: scansioni di Matsoftware (Wikimedia Commons), CC BY-SA 3.0, ritagliate e riscalate.
+BREVE: Carte: raccolta di mauriziogrillo (DeviantArt); mazzo siciliano Dal Negro.
