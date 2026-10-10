@@ -1,0 +1,80 @@
+/* LA HOME — il marchio di Appò Carte davanti a un ventaglio di carte, il nome,
+ * e la scelta del gioco: una riga per gioco. Due fregi di maiolica chiudono la pagina. */
+
+#home { align-items: center; justify-content: space-between; }
+.fregio { width: 100%; height: 20px; background: var(--maiolica); background-size: 20px 20px; flex: 0 0 auto; }
+.home-corpo { width: min(100% - 40px, 460px); display: flex; flex-direction: column; gap: var(--sp-5); padding-block: var(--sp-5) var(--sp-5); }
+
+/* il ventaglio esce da dietro il marchio, come carte tenute in mano */
+.insegna { position: relative; text-align: center; padding-top: var(--sp-2); }
+.ventaglio { position: relative; height: 170px; }
+.ventaglio .carta {
+  position: absolute; left: 50%; bottom: 0; width: 78px; margin-left: -39px;
+  transform-origin: 50% 135%;
+  transform: rotate(var(--r, 0deg));
+  box-shadow: 0 10px 24px var(--ombra-forte);
+  animation: apri-ventaglio var(--lento) var(--uscita) both;
+}
+.ventaglio .carta:nth-child(1) { --r: -30deg; animation-delay: 60ms; }
+.ventaglio .carta:nth-child(2) { --r: -15deg; animation-delay: 120ms; }
+.ventaglio .carta:nth-child(3) { --r: 0deg; animation-delay: 180ms; }
+.ventaglio .carta:nth-child(4) { --r: 15deg; animation-delay: 240ms; }
+.ventaglio .carta:nth-child(5) { --r: 30deg; animation-delay: 300ms; }
+@keyframes apri-ventaglio { from { transform: rotate(0deg) translateY(18px); opacity: 0; } }
+
+/* il marchio: il cerchio arancio di Appò, unico arancio della pagina. Un
+ * anello di calce lo stacca dalle carte che gli stanno dietro. */
+.marchio { position: relative; margin: -86px auto 0; width: 148px; height: 148px; line-height: 0; }
+.marchio img {
+  width: 100%; height: 100%; border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--calce), 0 14px 30px var(--ombra-forte);
+  animation: marchio var(--lento) var(--uscita) both 120ms;
+}
+@keyframes marchio { from { transform: scale(0.85); opacity: 0; } }
+.motto { margin-top: var(--sp-4); color: var(--inchiostro-2); font-size: 1rem; line-height: 1.45; }
+
+.ingresso { display: flex; flex-direction: column; gap: var(--sp-3); }
+.ingresso .bottone { width: 100%; }
+
+/* ── la scelta del gioco ── */
+.giochi h2, .pubbliche h2 { font-size: 1rem; font-family: var(--f-corpo); font-weight: 700; color: var(--inchiostro-2); margin-bottom: var(--sp-2); }
+.lista-giochi { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-3); }
+.riga-gioco {
+  position: relative; overflow: hidden;
+  background: var(--bianco); border: 1px solid var(--calce-3); border-radius: var(--r-l);
+  padding: calc(var(--sp-4) + 8px) var(--sp-4) var(--sp-3);
+  box-shadow: 0 6px 18px var(--ombra);
+}
+/* la stessa piastrella del biglietto d'invito, in una striscia sottile */
+.riga-gioco::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: var(--maiolica); background-size: 8px 8px; opacity: 0.85; }
+.riga-testa { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); }
+.riga-testa h3 {
+  margin: 0; font-family: var(--f-titolo); font-weight: 900; font-size: 1.5rem; color: var(--cobalto);
+  font-variation-settings: 'opsz' 96, 'SOFT' 60; letter-spacing: -0.015em;
+}
+.riga-testa .quanti { font-size: 0.82rem; font-weight: 700; color: var(--muto); white-space: nowrap; text-align: right; }
+.riga-gioco .frase { margin-top: var(--sp-1); color: var(--inchiostro-2); font-size: 0.95rem; line-height: 1.4; }
+.riga-azioni { display: flex; align-items: center; gap: var(--sp-3); margin-top: var(--sp-3); flex-wrap: wrap; }
+.riga-azioni .apri { margin-left: auto; }
+.riga-gioco .cerca { margin-top: var(--sp-1); padding-left: 0; min-height: 36px; font-size: 0.9rem; }
+
+/* ── entrare in un tavolo che c'e' gia' ── */
+.entra-codice { display: flex; flex-direction: column; gap: var(--sp-3); }
+.entra-codice > .bottone { width: 100%; }
+.blocco-codice { display: flex; gap: var(--sp-2); }
+.blocco-codice input { font-family: var(--f-titolo); font-weight: 700; font-size: 1.6rem; letter-spacing: 0.32em; text-align: center; text-transform: uppercase; }
+.blocco-codice .bottone { flex: 0 0 auto; width: auto; }
+
+.pubbliche ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.tavolo-pubblico {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3);
+  min-height: var(--tocco); padding: 0 var(--sp-4); border-radius: var(--r-m);
+  border: 2px solid var(--calce-3); background: var(--bianco); cursor: pointer; text-align: left;
+}
+.tavolo-pubblico:hover { border-color: var(--cobalto); }
+.tavolo-pubblico .nomi { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tavolo-pubblico .nomi b { color: var(--cobalto); }
+.tavolo-pubblico .liberi { color: var(--cobalto); font-weight: 700; white-space: nowrap; }
+
+.home-piede { display: flex; justify-content: center; align-items: center; gap: var(--sp-2); }
+.home-piede .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--limone-scuro); }

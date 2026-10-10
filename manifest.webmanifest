@@ -1,0 +1,14 @@
+{
+  "name": "Appò Carte",
+  "short_name": "Appò Carte",
+  "description": "Cuticchiune, Briscola, Scopa e Scopone con le carte siciliane. Contro i bot, o con gli amici da un telefono a testa.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f2e8",
+  "theme_color": "#1f4fa3",
+  "lang": "it",
+  "icons": [
+    { "src": "icona.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

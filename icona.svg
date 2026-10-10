@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">Appò Carte</title>
+  <!-- Il marchio di Appò: il cerchio arancio pieno, «APPÒ» bianco, maiuscolo,
+       corsivo e pesante; sotto, piu' piccolo, «CARTE». Le lettere sono
+       tracciati, non testo: un'icona caricata come immagine non puo' usare
+       i font della pagina, e cosi' si vede uguale su ogni telefono. -->
+  <circle cx="256" cy="256" r="256" fill="#e27108"/>
+  <g fill="#fff" fill-rule="evenodd">
+    <!-- APPÒ: altezza 100, inclinata di 12 gradi -->
+    <g transform="translate(64.5 191) skewX(-12)">
+      <path d="M0 100 L36 0 H64 L100 100 H70 L64 80 H36 L30 100 Z M42 58 H58 L50 30 Z"/>
+      <path transform="translate(108 0)" d="M0 0 H54 A32 32 0 0 1 54 64 H30 V100 H0 Z M30 22 V42 H50 A10 10 0 0 0 50 22 Z"/>
+      <path transform="translate(202 0)" d="M0 0 H54 A32 32 0 0 1 54 64 H30 V100 H0 Z M30 22 V42 H50 A10 10 0 0 0 50 22 Z"/>
+      <path transform="translate(296 0)" d="M0 50 A54 50 0 1 0 108 50 A54 50 0 1 0 0 50 Z M30 50 A24 22 0 1 0 78 50 A24 22 0 1 0 30 50 Z"/>
+      <path transform="translate(296 0)" d="M40 -44 H63 L78 -13 H57 Z"/>
+    </g>
+    <!-- CARTE: le stesse lettere, al 44 per cento, piu' spaziate -->
+    <g transform="translate(144.7 319) scale(0.44) skewX(-12)">
+      <path d="M90.4 20.6 A50 50 0 1 0 90.4 79.4 L66.2 61.8 A20 20 0 1 1 66.2 38.2 Z"/>
+      <path transform="translate(114 0)" d="M0 100 L36 0 H64 L100 100 H70 L64 80 H36 L30 100 Z M42 58 H58 L50 30 Z"/>
+      <path transform="translate(237 0)" d="M0 0 H54 A32 32 0 0 1 72 58 L92 100 H60 L45 64 H30 V100 H0 Z M30 22 V42 H50 A10 10 0 0 0 50 22 Z"/>
+      <path transform="translate(350 0)" d="M0 0 H84 V26 H57 V100 H27 V26 H0 Z"/>
+      <path transform="translate(457 0)" d="M0 0 H70 V24 H30 V38 H62 V62 H30 V76 H70 V100 H0 Z"/>
+    </g>
+  </g>
+</svg>

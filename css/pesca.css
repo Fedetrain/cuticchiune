@@ -1,0 +1,132 @@
+/* IL TAVOLO A PESCA — Scopa e Scopone sulla stessa tovaglia cobalto.
+ * Le carte scoperte in mezzo, a file; il mucchio delle prese accanto a ogni
+ * targa, con le scope di traverso sopra; il foglietto per scegliere la presa
+ * appena sopra la mano. */
+
+/* ── le carte in tavola ── */
+#tavola {
+  position: absolute; z-index: var(--z-carte);
+  left: 50%; top: 47%; transform: translate(-50%, -50%);
+  width: min(calc(100% - 32px), calc(var(--carta-w) * 0.9 * 5 + 40px));
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
+}
+#tavolo.a-due #tavola { top: 46%; }
+.tavola-carte {
+  position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  min-height: calc(var(--carta-h) * 0.9);
+}
+.tavola-carte .carta {
+  width: calc(var(--carta-w) * 0.9); flex: 0 0 auto;
+  box-shadow: 0 8px 18px rgba(9,26,60,0.45), 0 2px 4px rgba(0,0,0,0.3);
+  transition: transform 220ms var(--uscita), box-shadow 220ms ease, opacity 220ms;
+}
+/* le carte non cadono mai dritte: un angolo fisso a seconda del posto in fila */
+.tavola-carte .carta:nth-child(4n+1) { transform: rotate(-2deg); }
+.tavola-carte .carta:nth-child(4n+2) { transform: rotate(1.5deg); }
+.tavola-carte .carta:nth-child(4n+3) { transform: rotate(-1deg); }
+.tavola-carte .carta:nth-child(4n) { transform: rotate(2.2deg); }
+.tavola-carte .carta.appena { animation: appare 360ms var(--uscita) both; }
+@keyframes appare { from { opacity: 0; translate: 0 -10px; } }
+.tavola-carte .carta.andata { visibility: hidden; }
+/* quello che la carta scelta puo' prendere si alza; la presa in vista si accende */
+.tavola-carte .carta.prendibile { translate: 0 -6px; box-shadow: 0 0 0 3px rgba(247,201,72,0.7), 0 10px 20px rgba(9,26,60,0.5); }
+.tavola-carte .carta.prendibile-forte { translate: 0 -10px; box-shadow: 0 0 0 4px var(--limone), 0 12px 24px rgba(9,26,60,0.55); }
+.tavola-carte .carta.presa { box-shadow: 0 0 0 3px var(--limone), 0 0 22px rgba(245,197,66,0.55), 0 12px 26px rgba(9,26,60,0.5); }
+
+/* la carta calata sopra quelle che prende */
+.tavola-sopra { position: absolute; inset: 0; pointer-events: none; }
+.tavola-sopra .carta.calata {
+  position: absolute; width: calc(var(--carta-w) * 0.9); transform: rotate(-6deg);
+  box-shadow: 0 0 0 3px var(--limone), 0 14px 26px rgba(9,26,60,0.6);
+}
+.tavola-sopra .carta.andata { visibility: hidden; }
+
+/* il tavolo vuoto: un ovale tratteggiato dove andranno le carte */
+#tavola.vuota .tavola-carte::before {
+  content: ""; width: calc(var(--carta-w) * 2.4); height: calc(var(--carta-h) * 0.9);
+  border: 2px dashed rgba(255,255,255,0.28); border-radius: 50%;
+}
+#tavola .suggerimento { position: static; transform: none; max-width: 100%; }
+
+/* ── il mucchio delle prese: coperto, col conto, e le scope di traverso ── */
+.mucchio {
+  position: absolute; z-index: 1;
+  width: calc(var(--carta-w) * 0.5); height: calc(var(--carta-h) * 0.5);
+  pointer-events: none;
+}
+.posto[data-lato="alto"] .mucchio, .posto[data-lato="basso"] .mucchio { left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+.posto[data-lato="basso"] .mucchio { top: 0; transform: none; height: var(--targa-h); }
+.posto[data-lato="sinistra"] .mucchio, .posto[data-lato="destra"] .mucchio { top: calc(100% + 4px); left: 50%; transform: translateX(-50%); }
+.mucchio > .carta:not(.di-traverso) { position: absolute; inset: 0; width: 100%; box-shadow: 0 3px 8px rgba(9,26,60,0.55); }
+.posto[data-lato="basso"] .mucchio > .carta:not(.di-traverso) { inset: auto 0 0 0; }
+/* la scopa: la carta si gira di traverso sul mucchio, come al tavolo vero */
+.mucchio .di-traverso {
+  position: absolute; left: 50%; top: 50%; width: 100%;
+  transform: translate(-50%, -50%) rotate(90deg) translateX(calc(var(--i, 0) * -5px));
+  box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+}
+.mucchio .conto {
+  position: absolute; right: -8px; bottom: -6px; z-index: 2;
+  min-width: 24px; padding: 1px 6px; border-radius: 999px; text-align: center;
+  background: var(--bianco); color: var(--inchiostro); font-weight: 800; font-size: 0.75rem; font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+/* ancora niente prese: il posto del mucchio, tratteggiato */
+.mucchio.vuoto::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--carta-h) * 0.5); border: 2px dashed rgba(255,255,255,0.4); border-radius: 6px; }
+.posto[data-lato="basso"] .mucchio.vuoto::before { height: 100%; }
+.mucchio.vuoto .conto { opacity: 0.75; }
+
+/* ── il foglietto: con quale presa ── */
+.foglio {
+  position: absolute; z-index: var(--z-volo); left: 50%; transform: translateX(-50%);
+  bottom: calc(var(--carta-h) + 44px);
+  width: min(calc(100% - 24px), 380px);
+  background: var(--calce); color: var(--inchiostro); border-radius: var(--r-l);
+  padding: var(--sp-4) var(--sp-4) var(--sp-2);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: pannello var(--medio) var(--uscita);
+}
+.foglio::before { content: ""; display: block; height: 8px; margin: calc(var(--sp-4) * -1) calc(var(--sp-4) * -1) var(--sp-3); border-radius: var(--r-l) var(--r-l) 0 0; background: var(--maiolica); background-size: 8px 8px; }
+.foglio-titolo { font-family: var(--f-titolo); font-weight: 800; font-size: 1.1rem; color: var(--cobalto); margin-bottom: var(--sp-2); }
+.foglio-scelte { display: flex; flex-direction: column; gap: var(--sp-2); }
+.scelta-presa {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  min-height: 64px; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-m);
+  border: 2px solid var(--calce-3); background: var(--bianco); cursor: pointer; text-align: left;
+}
+.scelta-presa:hover, .scelta-presa:focus-visible { border-color: var(--cobalto); background: var(--cobalto-velo); }
+.scelta-presa .carte-piccole { display: flex; gap: 4px; }
+.scelta-presa .carta { width: 34px; box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
+.scelta-presa .somma { font-weight: 800; color: var(--inchiostro-2); font-variant-numeric: tabular-nums; }
+.foglio [data-annulla] { display: block; margin: var(--sp-1) auto 0; }
+
+/* ── la scritta della scopa ── */
+.timbro {
+  position: absolute; left: 50%; top: 50%; z-index: var(--z-volo);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: var(--sp-2) var(--sp-5); border-radius: var(--r-m);
+  background: var(--limone); color: var(--inchiostro);
+  box-shadow: 0 0 0 4px var(--bianco), 0 16px 40px rgba(0,0,0,0.45);
+  transform: translate(-50%, -50%) rotate(-7deg);
+  animation: timbro 1700ms var(--uscita) forwards;
+  pointer-events: none;
+}
+.timbro strong { font-family: var(--f-titolo); font-weight: 900; font-size: 2.2rem; line-height: 1; letter-spacing: -0.01em; font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1; }
+.timbro span { font-weight: 700; font-size: 0.9rem; }
+@keyframes timbro {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotate(-7deg) scale(1.6); }
+  14% { opacity: 1; transform: translate(-50%, -50%) rotate(-7deg) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotate(-7deg) scale(0.96); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timbro { animation: none; }
+  .tavola-carte .carta.appena { animation: none; }
+}
+
+/* telefono girato: le carte in tavola si stringono */
+@media (max-height: 560px) {
+  #tavola { top: 40%; }
+  .tavola-carte .carta, .tavola-sopra .carta.calata { width: calc(var(--carta-w) * 0.74); }
+}

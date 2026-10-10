@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#1f4fa3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Appò Carte">
+<meta name="description" content="Appò Carte: Cuticchiune, Briscola, Scopa e Scopone con le carte siciliane. Contro i bot, o con gli amici da un telefono a testa.">
+<title>Appò Carte</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icona.svg">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/lobby.css">
+<link rel="stylesheet" href="css/tavolo.css">
+<link rel="stylesheet" href="css/pesca.css">
+<link rel="stylesheet" href="css/pannelli.css">
+</head>
+<body>
+
+<!-- ═══════════════════ HOME: LA SCELTA DEL GIOCO ═══════════════════ -->
+<section id="home" class="schermo attivo" aria-label="Scelta del gioco">
+  <div class="fregio" aria-hidden="true"></div>
+  <div class="home-corpo">
+    <header class="insegna">
+      <div class="ventaglio" aria-hidden="true"></div>
+      <h1 class="marchio"><img src="icona.svg" alt="Appò Carte" width="148" height="148"></h1>
+      <p class="motto">Carte siciliane al tavolo: contro i bot, o con gli amici da un telefono a testa.</p>
+    </header>
+
+    <form id="form-home" class="ingresso" autocomplete="off">
+      <label class="campo">
+        <span>Come ti chiami</span>
+        <input id="in-nome" name="nome" maxlength="14" placeholder="Rosalia" required>
+      </label>
+    </form>
+
+    <section class="giochi" aria-labelledby="titolo-giochi">
+      <h2 id="titolo-giochi">Scegli il gioco</h2>
+      <ul id="lista-giochi" class="lista-giochi"></ul>
+    </section>
+
+    <section id="pubbliche" class="pubbliche" hidden>
+      <h2>Tavoli pubblici aperti</h2>
+      <ul id="lista-pubbliche"></ul>
+    </section>
+
+    <div class="entra-codice">
+      <button type="button" id="btn-mostra-codice" class="bottone secondario">Entra con il codice</button>
+      <form id="blocco-codice" class="blocco-codice" autocomplete="off" hidden>
+        <input id="in-codice" name="codice" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="ABCD" aria-label="codice del tavolo, quattro lettere">
+        <button type="submit" class="bottone secondario">Entra al tavolo</button>
+      </form>
+      <p id="errore-home" class="errore" role="alert" hidden></p>
+    </div>
+
+    <nav class="home-piede">
+      <button type="button" class="bottone terziario" data-apri="regole">Come si gioca</button>
+      <span class="punto" aria-hidden="true"></span>
+      <button type="button" class="bottone terziario" data-apri="albo">Albo</button>
+    </nav>
+  </div>
+  <div class="fregio" aria-hidden="true"></div>
+</section>
+
+<!-- ═══════════════════ LOBBY ═══════════════════ -->
+<section id="lobby" class="schermo" aria-label="Tavolo in attesa">
+  <header class="lobby-testa">
+    <button type="button" class="bottone terziario" id="btn-esci-lobby">← Esci dal tavolo</button>
+    <button type="button" class="bottone icona" id="btn-audio-lobby" aria-label="audio" data-audio><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="onde" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+  </header>
+
+  <div class="lobby-corpo">
+    <div class="biglietto">
+      <p class="biglietto-etichetta" id="lobby-gioco">Il tavolo</p>
+      <p class="codice" id="lobby-codice">····</p>
+      <div class="biglietto-invito">
+        <img id="lobby-qr" class="qr" alt="QR del link del tavolo" width="120" height="120">
+        <div class="biglietto-testo">
+          <p>Manda il link o fai inquadrare il QR. Chi entra si siede.</p>
+          <code id="lobby-link">…</code>
+          <div class="riga-bottoni sinistra">
+            <button type="button" class="bottone secondario piccolo" id="btn-copia">Copia il link</button>
+            <button type="button" class="bottone secondario piccolo" id="btn-condividi" hidden>Condividi il link</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tavolino" aria-label="i posti al tavolo">
+      <div class="sedia" data-lato="nord"></div>
+      <div class="sedia" data-lato="ovest"></div>
+      <div class="tovaglietta" aria-hidden="true"></div>
+      <div class="sedia" data-lato="est"></div>
+      <div class="sedia" data-lato="sud"></div>
+    </div>
+    <p id="lobby-spettatori" class="nota centro" hidden></p>
+
+    <details class="opzioni" id="lobby-opzioni">
+      <summary>Gioco e opzioni del tavolo</summary>
+      <label class="opzione">
+        <span>Gioco</span>
+        <select id="opz-gioco"></select>
+      </label>
+      <div class="opzione">
+        <span id="etichetta-posti">Giocatori</span>
+        <div class="scelta-posti" id="opz-posti" role="radiogroup" aria-labelledby="etichetta-posti"></div>
+      </div>
+      <div id="opz-gioco-proprie"></div>
+      <div class="opzioni-tavolo">
+        <label class="opzione">
+          <span>Tempo per giocare una carta</span>
+          <select id="opz-timer">
+            <option value="0">nessuno</option>
+            <option value="20">20 s</option>
+            <option value="45">45 s</option>
+            <option value="90">90 s</option>
+          </select>
+        </label>
+        <label class="opzione"><span>Se uno cade, gioca il bot al suo posto</span><input type="checkbox" id="opz-bot"></label>
+        <label class="opzione"><span>Tavolo pubblico: chiunque può entrare</span><input type="checkbox" id="opz-pubblica"></label>
+      </div>
+    </details>
+  </div>
+
+  <footer class="lobby-piede">
+    <p id="lobby-stato" class="nota"></p>
+    <button type="button" class="bottone primario" id="btn-inizia" hidden>Inizia la partita</button>
+    <button type="button" class="bottone primario" id="btn-pronto" hidden>Sono pronto</button>
+    <button type="button" class="bottone terziario" data-apri="regole">Come si gioca</button>
+  </footer>
+</section>
+
+<!-- ═══════════════════ PARTITA ═══════════════════ -->
+<section id="partita" class="schermo" aria-label="Partita">
+  <header id="barra">
+    <div class="barra-gruppo">
+      <span id="barra-codice" class="chip">····</span>
+      <span id="barra-mano" class="chip tenue">mano 1</span>
+    </div>
+    <div class="barra-gruppo">
+      <button type="button" class="bottone icona" id="btn-ultima-presa" aria-label="ultima presa" title="Ultima presa" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/></svg></button>
+      <button type="button" class="bottone icona" id="btn-chat" aria-label="chat" title="Chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/></svg><i id="chat-nuovi" class="pallino" hidden></i></button>
+      <button type="button" class="bottone icona" data-apri="regole" aria-label="regole" title="Regole"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg></button>
+      <button type="button" class="bottone icona" id="btn-audio" aria-label="audio" data-audio><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="onde" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    </div>
+  </header>
+
+  <div id="tavolo">
+    <div class="tovaglia" aria-hidden="true"></div>
+
+    <div class="posto" data-lato="alto"><div class="targa"></div><div class="mano-altrui"></div><div class="mucchio" hidden></div></div>
+    <div class="posto" data-lato="sinistra"><div class="targa"></div><div class="mano-altrui"></div><div class="mucchio" hidden></div></div>
+    <div class="posto" data-lato="destra"><div class="targa"></div><div class="mano-altrui"></div><div class="mucchio" hidden></div></div>
+    <div class="posto" data-lato="basso"><div class="targa"></div><div class="mucchio" hidden></div></div>
+
+    <!-- giochi a prese: una carta per posto -->
+    <div id="centro">
+      <div class="slot" data-lato="alto"></div>
+      <div class="slot" data-lato="sinistra"></div>
+      <div class="slot" data-lato="destra"></div>
+      <div class="slot" data-lato="basso"></div>
+      <p id="suggerimento" class="suggerimento" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- giochi a pesca: le carte scoperte in mezzo -->
+    <div id="tavola" aria-label="le carte in tavola">
+      <div class="tavola-carte"></div>
+      <div class="tavola-sopra" aria-hidden="true"></div>
+      <p class="suggerimento" role="status" aria-live="polite"></p>
+    </div>
+
+    <div id="mazzo" class="mazzo" hidden aria-label="il mazzo"></div>
+
+    <div id="mia-mano" aria-label="le tue carte"></div>
+
+    <div id="foglio-prese" class="foglio" role="dialog" aria-labelledby="foglio-titolo" hidden>
+      <p class="foglio-titolo" id="foglio-titolo"></p>
+      <div class="foglio-scelte"></div>
+      <button type="button" class="bottone terziario piccolo" data-annulla>Scegli un'altra carta</button>
+    </div>
+
+    <div id="volo" aria-hidden="true"></div>
+    <p id="spettatore-banda" class="banda" hidden>Stai guardando. Alla prossima partita puoi sederti.</p>
+  </div>
+
+  <div id="velo-fine-mano" class="velo" hidden>
+    <div class="pannello centrato">
+      <p class="sopratitolo" id="fm-numero"></p>
+      <h2 id="fm-titolo"></h2>
+      <p id="fm-motivo" class="motivo"></p>
+      <table class="tabella" id="fm-tabella"></table>
+      <p id="fm-prossima" class="nota"></p>
+      <div class="riga-bottoni">
+        <button type="button" class="bottone secondario" id="btn-fm-prese">Vedi le prese</button>
+        <button type="button" class="bottone primario" id="btn-avanti" hidden>Inizia la prossima mano</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="velo-fine-partita" class="velo" hidden>
+    <div class="pannello centrato">
+      <p class="sopratitolo">Partita finita</p>
+      <h2 id="fp-titolo"></h2>
+      <p id="fp-motivo" class="motivo"></p>
+      <ol id="fp-classifica" class="classifica"></ol>
+      <div class="riga-bottoni">
+        <button type="button" class="bottone primario" id="btn-rivincita">Chiedi la rivincita</button>
+        <button type="button" class="bottone secondario" id="btn-torna-attesa" hidden>Torna al tavolo</button>
+        <button type="button" class="bottone terziario" id="btn-esci-partita">Esci dal tavolo</button>
+      </div>
+      <p id="fp-rivincita" class="nota"></p>
+    </div>
+  </div>
+
+  <div id="velo-prese" class="velo" hidden>
+    <div class="pannello">
+      <header class="pannello-testa"><h2 id="prese-titolo">Ultima presa</h2><button type="button" class="bottone icona" data-chiudi="velo-prese" aria-label="chiudi">✕</button></header>
+      <div id="prese-corpo" class="prese"></div>
+    </div>
+  </div>
+
+  <aside id="chat" class="cassetto" hidden aria-label="chat">
+    <header><strong>Al tavolo</strong><button type="button" class="bottone icona" data-chiudi="chat" aria-label="chiudi">✕</button></header>
+    <div id="emote-riga" class="emote-riga"></div>
+    <ul id="chat-lista"></ul>
+    <form id="form-chat"><input id="in-chat" maxlength="140" placeholder="Bella mano" autocomplete="off" aria-label="messaggio per il tavolo"><button type="submit" class="bottone primario piccolo">Manda</button></form>
+  </aside>
+</section>
+
+<!-- ═══════════════════ REGOLE ═══════════════════ -->
+<div id="regole" class="velo" hidden>
+  <div class="pannello lungo">
+    <header class="pannello-testa"><h2 id="regole-titolo">Come si gioca</h2><button type="button" class="bottone icona" data-chiudi="regole" aria-label="chiudi">✕</button></header>
+    <div id="regole-schede" class="linguette" role="tablist" aria-label="Il gioco"></div>
+    <div class="regole" id="regole-corpo"></div>
+    <p class="nota" id="crediti-mazzo" hidden></p>
+  </div>
+</div>
+
+<!-- ═══════════════════ ALBO ═══════════════════ -->
+<div id="albo" class="velo" hidden>
+  <div class="pannello lungo">
+    <header class="pannello-testa"><h2>Albo</h2><button type="button" class="bottone icona" data-chiudi="albo" aria-label="chiudi">✕</button></header>
+    <div id="albo-schede" class="linguette" role="tablist" aria-label="Il gioco"></div>
+    <div id="albo-corpo"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>window.APPO_CARTE_STATICO = true;</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
